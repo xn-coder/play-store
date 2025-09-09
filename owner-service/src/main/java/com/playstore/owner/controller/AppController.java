@@ -89,6 +89,23 @@ public class AppController {
         App app = appService.updateApp(id, request, ownerId);
         return ResponseEntity.ok(app);
     }
+
+    
+    @PutMapping("/{id}/visibility")
+    @PreAuthorize("hasRole(\\'OWNER\\')")
+    @Operation(summary = "Toggle app visibility")
+    public ResponseEntity<App> toggleVisibility(@PathVariable Long id, @RequestParam boolean visible) {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        Long ownerId = Long.parseLong(auth.getName());
+        App app = appService.toggleVisibility(id, visible, ownerId);
+        return ResponseEntity.ok(app);
+    }
+    
+    @GetMapping("/health")
+    @Operation(summary = "Health check")
+    public ResponseEntity<String> healthCheck() {
+        return ResponseEntity.ok("Owner service is running");
+    }
     
     @DeleteMapping("/{id}")
     @PreAuthorize("hasRole(\'OWNER\')")

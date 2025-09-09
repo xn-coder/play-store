@@ -84,4 +84,16 @@ public class AppService {
     public List<App> getOwnerApps(Long ownerId) {
         return appRepository.findByOwnerId(ownerId);
     }
+
+    
+    public App toggleVisibility(Long id, boolean visible, Long ownerId) {
+        App app = getAppById(id);
+        
+        if (!app.getOwner().getId().equals(ownerId)) {
+            throw new RuntimeException("Not authorized to update this app");
+        }
+        
+        app.setVisible(visible);
+        return appRepository.save(app);
+    }
 }

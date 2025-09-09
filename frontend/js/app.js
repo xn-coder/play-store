@@ -1,27 +1,47 @@
 // Play Store Frontend JavaScript
 
-// API Configuration
-const API_BASE_URL = 'http://localhost:8080';
-const USER_API_URL = `${API_BASE_URL}/api/users`;
-const OWNER_API_URL = `${API_BASE_URL}/api/owners`;
-const APP_API_URL = `${API_BASE_URL}/api/apps`;
-
-// Direct service URLs for testing (fallback)
-const USER_SERVICE_URL = 'http://localhost:8081/api/users';
-const OWNER_SERVICE_URL = 'http://localhost:8082/api/owners';
-const APP_SERVICE_URL = 'http://localhost:8082/api/apps';
-
 // Global State
 let currentUser = null;
 let currentUserType = null; // 'user' or 'owner'
 let authToken = null;
 let currentApps = [];
+let API_URLS = {};
 
 // Initialize App
 document.addEventListener('DOMContentLoaded', function() {
+    // Initialize API URLs from config
+    API_URLS = window.apiConfig.getApiUrls();
+    
+    // Check API connectivity
+    checkApiConnectivity();
+    
+    // Check auth status and load initial data
     checkAuthStatus();
     loadApps();
 });
+
+// API Connectivity Check
+async function checkApiConnectivity() {
+    try {
+        const results = await window.apiConfig.testConnectivity();
+        const hasIssues = Object.values(results).some(status => !status);
+        
+        if (hasIssues) {
+            showConnectionStatus('Some services may be unavailable. Please ensure all backend services are running.', 'warning');
+        }
+    } catch (error) {
+        showConnectionStatus('Unable to connect to backend services. Please check if services are running.', 'danger');
+    }
+}
+
+function showConnectionStatus(message, type) {
+    const statusBanner = document.getElementById('connectionStatus');
+    const messageSpan = document.getElementById('connectionMessage');
+    
+    statusBanner.className = `alert alert-${type} alert-dismissible`;
+    messageSpan.textContent = message;
+    statusBanner.classList.remove('d-none');
+}
 
 // Authentication Functions
 function checkAuthStatus() {
@@ -133,6 +153,34 @@ function showOwnerRegister() {
     document.getElementById('ownerRegisterForm').style.display = 'block';
 }
 
+// Enhanced API call function with better error handling
+async function makeApiCall(url, options = {}) {
+    try {
+        const response = await fetch(url, {
+            ...options,
+            headers: {
+                'Content-Type': 'application/json',
+                ...options.headers
+            }
+        });
+        
+        if (!response.ok) {
+            const errorText = await response.text();
+            throw new Error(`HTTP ${response.status}: ${errorText}`);
+        }
+        
+        const contentType = response.headers.get('content-type');
+        if (contentType && contentType.includes('application/json')) {
+            return await response.json();
+        } else {
+            return await response.text();
+        }
+    } catch (error) {
+        console.error('API call failed:', error);
+        throw error;
+    }
+}
+
 // Authentication API Calls
 async function userLogin(event) {
     event.preventDefault();
@@ -141,23 +189,14 @@ async function userLogin(event) {
     
     showLoading(true);
     try {
-        const response = await fetch(`${USER_API_URL}/auth/login`, {
+        const response = await makeApiCall(`${API_URLS.USER_API_URL}/auth/login`, {
             method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
             body: JSON.stringify({ username, password })
         });
         
-        if (response.ok) {
-            const data = await response.json();
-            handleAuthSuccess(data, 'user');
-        } else {
-            const error = await response.text();
-            showAlert('Login failed: ' + error, 'danger');
-        }
+        handleAuthSuccess(response, 'user');
     } catch (error) {
-        showAlert('Network error: ' + error.message, 'danger');
+        showAlert('Login failed: ' + error.message, 'danger');
     }
     showLoading(false);
 }
@@ -170,23 +209,14 @@ async function userRegister(event) {
     
     showLoading(true);
     try {
-        const response = await fetch(`${USER_API_URL}/auth/register`, {
+        const response = await makeApiCall(`${API_URLS.USER_API_URL}/auth/register`, {
             method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
             body: JSON.stringify({ username, email, password })
         });
         
-        if (response.ok) {
-            const data = await response.json();
-            handleAuthSuccess(data, 'user');
-        } else {
-            const error = await response.text();
-            showAlert('Registration failed: ' + error, 'danger');
-        }
+        handleAuthSuccess(response, 'user');
     } catch (error) {
-        showAlert('Network error: ' + error.message, 'danger');
+        showAlert('Registration failed: ' + error.message, 'danger');
     }
     showLoading(false);
 }
@@ -198,23 +228,14 @@ async function ownerLogin(event) {
     
     showLoading(true);
     try {
-        const response = await fetch(`${OWNER_API_URL}/auth/login`, {
+        const response = await makeApiCall(`${API_URLS.OWNER_API_URL}/auth/login`, {
             method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
             body: JSON.stringify({ username, password })
         });
         
-        if (response.ok) {
-            const data = await response.json();
-            handleAuthSuccess(data, 'owner');
-        } else {
-            const error = await response.text();
-            showAlert('Login failed: ' + error, 'danger');
-        }
+        handleAuthSuccess(response, 'owner');
     } catch (error) {
-        showAlert('Network error: ' + error.message, 'danger');
+        showAlert('Login failed: ' + error.message, 'danger');
     }
     showLoading(false);
 }
@@ -228,23 +249,14 @@ async function ownerRegister(event) {
     
     showLoading(true);
     try {
-        const response = await fetch(`${OWNER_API_URL}/auth/register`, {
+        const response = await makeApiCall(`${API_URLS.OWNER_API_URL}/auth/register`, {
             method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
             body: JSON.stringify({ username, email, password, companyName })
         });
         
-        if (response.ok) {
-            const data = await response.json();
-            handleAuthSuccess(data, 'owner');
-        } else {
-            const error = await response.text();
-            showAlert('Registration failed: ' + error, 'danger');
-        }
+        handleAuthSuccess(response, 'owner');
     } catch (error) {
-        showAlert('Network error: ' + error.message, 'danger');
+        showAlert('Registration failed: ' + error.message, 'danger');
     }
     showLoading(false);
 }
@@ -281,16 +293,11 @@ function logout() {
 async function loadApps() {
     showLoading(true);
     try {
-        const response = await fetch(`${APP_API_URL}`);
-        if (response.ok) {
-            const apps = await response.json();
-            currentApps = apps;
-            displayApps(apps);
-        } else {
-            showAlert('Failed to load apps', 'danger');
-        }
+        const apps = await makeApiCall(`${API_URLS.APP_API_URL}`);
+        currentApps = apps;
+        displayApps(apps);
     } catch (error) {
-        showAlert('Network error: ' + error.message, 'danger');
+        showAlert('Failed to load apps: ' + error.message, 'danger');
     }
     showLoading(false);
 }
@@ -386,32 +393,7 @@ function filterApps() {
     displayApps(filteredApps);
 }
 
-// Utility Functions
-function showLoading(show) {
-    const spinner = document.getElementById('loadingSpinner');
-    if (show) {
-        spinner.classList.remove('d-none');
-    } else {
-        spinner.classList.add('d-none');
-    }
-}
-
-function showAlert(message, type) {
-    const alertDiv = document.createElement('div');
-    alertDiv.className = `alert alert-${type} alert-dismissible fade show`;
-    alertDiv.innerHTML = `
-        ${message}
-        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-    `;
-    
-    document.body.insertBefore(alertDiv, document.body.firstChild);
-    
-    setTimeout(() => {
-        alertDiv.remove();
-    }, 5000);
-}
-
-// Placeholder functions (to be implemented)
+// App Details and Reviews
 let currentAppId = null;
 
 async function showAppDetails(appId) {
@@ -419,17 +401,15 @@ async function showAppDetails(appId) {
         showLoading(true);
         
         // Fetch app details
-        const appResponse = await fetch(`${APP_API_URL}/${appId}`);
-        if (!appResponse.ok) throw new Error("Failed to fetch app details");
-        const app = await appResponse.json();
+        const app = await makeApiCall(`${API_URLS.APP_API_URL}/${appId}`);
         
         // Fetch app reviews
-        const reviewsResponse = await fetch(`${USER_API_URL}/reviews/app/${appId}`);
-        const reviews = reviewsResponse.ok ? await reviewsResponse.json() : [];
+        const reviews = await makeApiCall(`${API_URLS.USER_API_URL}/reviews/app/${appId}`)
+            .catch(() => []); // If reviews fail, show empty array
         
         // Fetch average rating
-        const ratingResponse = await fetch(`${USER_API_URL}/reviews/app/${appId}/average-rating`);
-        const averageRating = ratingResponse.ok ? await ratingResponse.json() : 0;
+        const averageRating = await makeApiCall(`${API_URLS.USER_API_URL}/reviews/app/${appId}/average-rating`)
+            .catch(() => 0); // If rating fails, show 0
         
         currentAppId = appId;
         
@@ -461,13 +441,17 @@ async function showAppDetails(appId) {
                         <div class="col-sm-6">
                             <strong>Rating:</strong> 
                             <span class="rating-stars">${generateStars(averageRating)}</span>
-                            (${averageRating.toFixed(1)})
+                            (${typeof averageRating === 'number' ? averageRating.toFixed(1) : '0.0'})
                         </div>
                     </div>
                     
                     <div class="row">
                         <div class="col-sm-6">
                             <strong>Release Date:</strong> ${new Date(app.releaseDate).toLocaleDateString()}
+                        </div>
+                        <div class="col-sm-6">
+                            <strong>Visibility:</strong> 
+                            <span class="badge ${app.visible ? 'bg-success' : 'bg-warning'}">${app.visible ? 'Public' : 'Hidden'}</span>
                         </div>
                     </div>
                 </div>
@@ -566,10 +550,9 @@ async function submitReview(event) {
     
     try {
         showLoading(true);
-        const response = await fetch(`${USER_API_URL}/reviews`, {
+        await makeApiCall(`${API_URLS.USER_API_URL}/reviews`, {
             method: "POST",
             headers: {
-                "Content-Type": "application/json",
                 "Authorization": `Bearer ${authToken}`
             },
             body: JSON.stringify({
@@ -579,17 +562,12 @@ async function submitReview(event) {
             })
         });
         
-        if (response.ok) {
-            showAlert("Review submitted successfully!", "success");
-            hideReviewForm();
-            // Refresh app details to show new review
-            showAppDetails(currentAppId);
-        } else {
-            const error = await response.text();
-            showAlert("Failed to submit review: " + error, "danger");
-        }
+        showAlert("Review submitted successfully!", "success");
+        hideReviewForm();
+        // Refresh app details to show new review
+        showAppDetails(currentAppId);
     } catch (error) {
-        showAlert("Network error: " + error.message, "danger");
+        showAlert("Failed to submit review: " + error.message, "danger");
     }
     showLoading(false);
 }
@@ -599,43 +577,35 @@ async function downloadApp() {
     
     try {
         showLoading(true);
-        const response = await fetch(`${APP_API_URL}/${currentAppId}/download`, {
+        await makeApiCall(`${API_URLS.APP_API_URL}/${currentAppId}/download`, {
             method: "POST"
         });
         
-        if (response.ok) {
-            showAlert("Download started! Thank you for downloading.", "success");
-            // Close modal
-            const modal = bootstrap.Modal.getInstance(document.getElementById("appDetailsModal"));
-            modal.hide();
-        } else {
-            showAlert("Download failed. Please try again.", "danger");
-        }
+        showAlert("Download started! Thank you for downloading.", "success");
+        // Close modal
+        const modal = bootstrap.Modal.getInstance(document.getElementById("appDetailsModal"));
+        modal.hide();
     } catch (error) {
-        showAlert("Network error: " + error.message, "danger");
+        showAlert("Download failed: " + error.message, "danger");
     }
     showLoading(false);
 }
 
+// Owner App Management
 async function loadOwnerApps() {
     if (currentUserType !== "owner" || !authToken) return;
     
     try {
         showLoading(true);
-        const response = await fetch(`${APP_API_URL}/my-apps`, {
+        const apps = await makeApiCall(`${API_URLS.APP_API_URL}/my-apps`, {
             headers: {
                 "Authorization": `Bearer ${authToken}`
             }
         });
         
-        if (response.ok) {
-            const apps = await response.json();
-            displayOwnerApps(apps);
-        } else {
-            showAlert("Failed to load your apps", "danger");
-        }
+        displayOwnerApps(apps);
     } catch (error) {
-        showAlert("Network error: " + error.message, "danger");
+        showAlert("Failed to load your apps: " + error.message, "danger");
     }
     showLoading(false);
 }
@@ -706,25 +676,21 @@ function createOwnerAppCard(app) {
     return col;
 }
 
+// User Reviews Management
 async function loadMyReviews() {
     if (currentUserType !== "user" || !authToken) return;
     
     try {
         showLoading(true);
-        const response = await fetch(`${USER_API_URL}/reviews/my-reviews`, {
+        const reviews = await makeApiCall(`${API_URLS.USER_API_URL}/reviews/my-reviews`, {
             headers: {
                 "Authorization": `Bearer ${authToken}`
             }
         });
         
-        if (response.ok) {
-            const reviews = await response.json();
-            displayMyReviews(reviews);
-        } else {
-            showAlert("Failed to load your reviews", "danger");
-        }
+        displayMyReviews(reviews);
     } catch (error) {
-        showAlert("Network error: " + error.message, "danger");
+        showAlert("Failed to load your reviews: " + error.message, "danger");
     }
     showLoading(false);
 }
@@ -760,8 +726,9 @@ function displayMyReviews(reviews) {
     `).join("");
 }
 
+// Add New App Modal and Functions
 function showAddAppForm() {
-     if (currentUserType !== "owner") return;
+    if (currentUserType !== "owner") return;
     
     // Create modal for adding new app
     const modalHtml = `
@@ -852,62 +819,172 @@ async function submitApp(event) {
     
     try {
         showLoading(true);
-        const response = await fetch(`${APP_API_URL}`, {
+        await makeApiCall(`${API_URLS.APP_API_URL}`, {
             method: "POST",
             headers: {
-                "Content-Type": "application/json",
                 "Authorization": `Bearer ${authToken}`
             },
             body: JSON.stringify(appData)
         });
         
-        if (response.ok) {
-            showAlert("App created successfully!", "success");
-            
-            // Close modal
-            const modal = bootstrap.Modal.getInstance(document.getElementById("addAppModal"));
-            modal.hide();
-            
-            // Refresh owner apps
-            loadOwnerApps();
-        } else {
-            const error = await response.text();
-            showAlert("Failed to create app: " + error, "danger");
-        }
+        showAlert("App created successfully!", "success");
+        
+        // Close modal
+        const modal = bootstrap.Modal.getInstance(document.getElementById("addAppModal"));
+        modal.hide();
+        
+        // Refresh owner apps
+        loadOwnerApps();
     } catch (error) {
-        showAlert("Network error: " + error.message, "danger");
+        showAlert("Failed to create app: " + error.message, "danger");
     }
     showLoading(false);
 }
 
-// Additional helper functions for owner app management
+// ENHANCED: Edit App functionality - now properly implemented
 async function editApp(appId) {
-    console.log("Edit app:", appId);
-    // Implementation for editing apps
+    if (currentUserType !== "owner" || !authToken) return;
+    
+    try {
+        showLoading(true);
+        
+        // First fetch the app details
+        const app = await makeApiCall(`${API_URLS.APP_API_URL}/${appId}`, {
+            headers: {
+                "Authorization": `Bearer ${authToken}`
+            }
+        });
+        
+        // Create edit modal with pre-filled data
+        const modalHtml = `
+            <div class="modal fade" id="editAppModal" tabindex="-1">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title">Edit App: ${app.name}</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                        </div>
+                        <div class="modal-body">
+                            <form id="editAppForm" onsubmit="submitEditApp(event, ${appId})">
+                                <div class="mb-3">
+                                    <label for="editAppName" class="form-label">App Name</label>
+                                    <input type="text" class="form-control" id="editAppName" value="${app.name}" required>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="editAppDescription" class="form-label">Description</label>
+                                    <textarea class="form-control" id="editAppDescription" rows="3" required>${app.description}</textarea>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="mb-3">
+                                            <label for="editAppVersion" class="form-label">Version</label>
+                                            <input type="text" class="form-control" id="editAppVersion" value="${app.version}" required>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="mb-3">
+                                            <label for="editAppGenre" class="form-label">Genre</label>
+                                            <select class="form-select" id="editAppGenre" required>
+                                                <option value="">Select Genre</option>
+                                                <option value="games" ${app.genre === 'games' ? 'selected' : ''}>Games</option>
+                                                <option value="beauty" ${app.genre === 'beauty' ? 'selected' : ''}>Beauty</option>
+                                                <option value="fashion" ${app.genre === 'fashion' ? 'selected' : ''}>Fashion</option>
+                                                <option value="women" ${app.genre === 'women' ? 'selected' : ''}>Women</option>
+                                                <option value="health" ${app.genre === 'health' ? 'selected' : ''}>Health</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="editAppIconUrl" class="form-label">Icon URL (optional)</label>
+                                    <input type="url" class="form-control" id="editAppIconUrl" value="${app.iconUrl || ''}" placeholder="https://example.com/icon.png">
+                                </div>
+                                <div class="mb-3 form-check">
+                                    <input type="checkbox" class="form-check-input" id="editAppVisible" ${app.visible ? 'checked' : ''}>
+                                    <label class="form-check-label" for="editAppVisible">
+                                        Make app visible to users
+                                    </label>
+                                </div>
+                            </form>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                            <button type="submit" form="editAppForm" class="btn btn-primary">Update App</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        `;
+        
+        // Remove existing modal if present
+        const existingModal = document.getElementById("editAppModal");
+        if (existingModal) {
+            existingModal.remove();
+        }
+        
+        // Add modal to page
+        document.body.insertAdjacentHTML("beforeend", modalHtml);
+        
+        // Show modal
+        const modal = new bootstrap.Modal(document.getElementById("editAppModal"));
+        modal.show();
+        
+    } catch (error) {
+        showAlert("Failed to load app details for editing: " + error.message, "danger");
+    }
+    showLoading(false);
+}
+
+async function submitEditApp(event, appId) {
+    event.preventDefault();
+    
+    const appData = {
+        name: document.getElementById("editAppName").value,
+        description: document.getElementById("editAppDescription").value,
+        version: document.getElementById("editAppVersion").value,
+        genre: document.getElementById("editAppGenre").value,
+        iconUrl: document.getElementById("editAppIconUrl").value,
+        visible: document.getElementById("editAppVisible").checked
+    };
+    
+    try {
+        showLoading(true);
+        await makeApiCall(`${API_URLS.APP_API_URL}/${appId}`, {
+            method: "PUT",
+            headers: {
+                "Authorization": `Bearer ${authToken}`
+            },
+            body: JSON.stringify(appData)
+        });
+        
+        showAlert("App updated successfully!", "success");
+        
+        // Close modal
+        const modal = bootstrap.Modal.getInstance(document.getElementById("editAppModal"));
+        modal.hide();
+        
+        // Refresh owner apps
+        loadOwnerApps();
+    } catch (error) {
+        showAlert("Failed to update app: " + error.message, "danger");
+    }
+    showLoading(false);
 }
 
 async function toggleAppVisibility(appId, currentVisibility) {
     try {
         showLoading(true);
-        const response = await fetch(`${APP_API_URL}/${appId}`, {
+        await makeApiCall(`${API_URLS.APP_API_URL}/${appId}/visibility?visible=${!currentVisibility}`, {
             method: "PUT",
             headers: {
-                "Content-Type": "application/json",
                 "Authorization": `Bearer ${authToken}`
-            },
-            body: JSON.stringify({
-                visible: !currentVisibility
-            })
+            }
         });
         
-        if (response.ok) {
-            showAlert(`App ${!currentVisibility ? "shown" : "hidden"} successfully!`, "success");
-            loadOwnerApps(); // Refresh the list
-        } else {
-            showAlert("Failed to update app visibility", "danger");
-        }
+        showAlert(`App ${!currentVisibility ? "shown" : "hidden"} successfully!`, "success");
+        loadOwnerApps(); // Refresh the list
     } catch (error) {
-        showAlert("Network error: " + error.message, "danger");
+        showAlert("Failed to update app visibility: " + error.message, "danger");
     }
     showLoading(false);
 }
@@ -919,21 +996,42 @@ async function deleteApp(appId) {
     
     try {
         showLoading(true);
-        const response = await fetch(`${APP_API_URL}/${appId}`, {
+        await makeApiCall(`${API_URLS.APP_API_URL}/${appId}`, {
             method: "DELETE",
             headers: {
                 "Authorization": `Bearer ${authToken}`
             }
         });
         
-        if (response.ok) {
-            showAlert("App deleted successfully!", "success");
-            loadOwnerApps(); // Refresh the list
-        } else {
-            showAlert("Failed to delete app", "danger");
-        }
+        showAlert("App deleted successfully!", "success");
+        loadOwnerApps(); // Refresh the list
     } catch (error) {
-        showAlert("Network error: " + error.message, "danger");
+        showAlert("Failed to delete app: " + error.message, "danger");
     }
     showLoading(false);
+}
+
+// Utility Functions
+function showLoading(show) {
+    const spinner = document.getElementById('loadingSpinner');
+    if (show) {
+        spinner.classList.remove('d-none');
+    } else {
+        spinner.classList.add('d-none');
+    }
+}
+
+function showAlert(message, type) {
+    const alertDiv = document.createElement('div');
+    alertDiv.className = `alert alert-${type} alert-dismissible fade show`;
+    alertDiv.innerHTML = `
+        ${message}
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    `;
+    
+    document.body.insertBefore(alertDiv, document.body.firstChild);
+    
+    setTimeout(() => {
+        alertDiv.remove();
+    }, 5000);
 }

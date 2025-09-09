@@ -41,7 +41,7 @@ spring:
               - DELETE
               - OPTIONS
             allowedHeaders: "*"
-            allow-credentials: false
+            allow-credentials: true
 
 management:
   endpoints:

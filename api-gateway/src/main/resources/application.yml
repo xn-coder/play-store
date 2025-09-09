@@ -41,16 +41,16 @@ spring:
               - DELETE
               - OPTIONS
             allowedHeaders: "*"
-            allow-credentials: true
+            allow-credentials: false
 
 management:
   endpoints:
     web:
       cors:
-        allowed-origins: "http://localhost:3000"
+        allowed-origins: "*"
         allowed-methods: "GET,POST,PUT,DELETE,OPTIONS"
         allowed-headers: "*"
-        allow-credentials: true
+        allow-credentials: false
       exposure:
         include: "*"
 

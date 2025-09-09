@@ -1,5 +1,4 @@
-server:
-  port: 8080
+
 
 spring:
   application:
@@ -53,7 +52,7 @@ management:
         allowed-headers: "*"
         allow-credentials: true
       exposure:
-        include: health,info,metrics
+        include: "*"
 
 eureka:
   client:

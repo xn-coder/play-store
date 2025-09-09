@@ -7,10 +7,15 @@ let authToken = null;
 let currentApps = [];
 let API_URLS = {};
 
+// const USER_API_URL = "localhost:8081"
+
 // Initialize App
 document.addEventListener('DOMContentLoaded', function() {
     // Initialize API URLs from config
     API_URLS = window.apiConfig.getApiUrls();
+
+    console.log(API_URLS);
+    
     
     // Check API connectivity
     checkApiConnectivity();
@@ -129,7 +134,7 @@ function showUserLogin() {
     
     // Update tab appearance
     document.querySelectorAll('.nav-link').forEach(link => link.classList.remove('active'));
-    event.target.classList.add('active');
+    // event.target.classList.add('active');
 }
 
 function showUserRegister() {

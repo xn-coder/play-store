@@ -5,12 +5,22 @@
     <modelVersion>4.0.0</modelVersion>
 
     <parent>
-        <groupId>com.playstore</groupId>
-        <artifactId>play-store-parent</artifactId>
-        <version>1.0.0</version>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-parent</artifactId>
+        <version>3.2.1</version>
+        <relativePath/> <!-- lookup parent from repository -->
     </parent>
 
+    <groupId>com.playstore</groupId>
     <artifactId>config-server</artifactId>
+    <version>0.0.1-SNAPSHOT</version>
+    <name>config-server</name>
+    <description>Config Server for Play Store Microservices</description>
+
+    <properties>
+        <java.version>17</java.version>
+        <spring-cloud.version>2023.0.0</spring-cloud.version>
+    </properties>
 
     <dependencies>
         <dependency>
@@ -21,5 +31,31 @@
             <groupId>org.springframework.cloud</groupId>
             <artifactId>spring-cloud-starter-netflix-eureka-client</artifactId>
         </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-test</artifactId>
+            <scope>test</scope>
+        </dependency>
     </dependencies>
+
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>org.springframework.cloud</groupId>
+                <artifactId>spring-cloud-dependencies</artifactId>
+                <version>${spring-cloud.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+            </plugin>
+        </plugins>
+    </build>
 </project>

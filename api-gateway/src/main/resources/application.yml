@@ -11,22 +11,58 @@ spring:
           uri: lb://user-service
           predicates:
             - Path=/api/users/**
-        - id: owner-service
+          filters:
+            - StripPrefix=0
+        - id: owner-service-auth
           uri: lb://owner-service
           predicates:
-            - Path=/api/owners/**,/api/apps/**
+            - Path=/api/owners/**
+          filters:
+            - StripPrefix=0
+        - id: owner-service-apps
+          uri: lb://owner-service
+          predicates:
+            - Path=/api/apps/**
+          filters:
+            - StripPrefix=0
         - id: notification-service
           uri: lb://notification-service
           predicates:
             - Path=/api/notifications/**
-        - id: frontend
-          uri: http://localhost:8080
-          predicates:
-            - Path=/**
           filters:
-            - RewritePath=/(?<segment>.*), /$\{segment}
+            - StripPrefix=0
+      globalcors:
+        cors-configurations:
+          '[/**]':
+            allowedOrigins: "*"
+            allowedMethods:
+              - GET
+              - POST
+              - PUT
+              - DELETE
+              - OPTIONS
+            allowedHeaders: "*"
+            allow-credentials: false
+
+management:
+  endpoints:
+    web:
+      cors:
+        allowed-origins: "http://localhost:3000"
+        allowed-methods: "GET,POST,PUT,DELETE,OPTIONS"
+        allowed-headers: "*"
+        allow-credentials: true
+      exposure:
+        include: health,info,metrics
 
 eureka:
   client:
     service-url:
       defaultZone: http://localhost:8761/eureka/
+    register-with-eureka: true
+    fetch-registry: true
+
+logging:
+  level:
+    org.springframework.cloud.gateway: DEBUG
+    org.springframework.web.cors: DEBUG

@@ -39,10 +39,4 @@ public class AuthController {
     public ResponseEntity<String> logoutUser() {
         return ResponseEntity.ok("User logged out successfully!");
     }
-    
-    @GetMapping("/health")
-    @Operation(summary = "Health check")
-    public ResponseEntity<String> healthCheck() {
-        return ResponseEntity.ok("User service is running");
-    }
 }

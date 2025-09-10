@@ -18,11 +18,11 @@ public class AuthController {
 
     @PostMapping("/signin")
     public ResponseEntity<JwtResponse> authenticateUser(@RequestBody LoginRequest loginRequest) {
-        return authService.authenticateUser(loginRequest.getUsername(), loginRequest.getPassword());
+        return authService.authenticateUser(loginRequest);
     }
 
     @PostMapping("/signup")
     public ResponseEntity<MessageResponse> registerUser(@RequestBody SignupRequest signupRequest) {
-        return authService.registerUser(signupRequest.getUsername(), signupRequest.getPassword());
+        return authService.registerUser(signupRequest);
     }
 }

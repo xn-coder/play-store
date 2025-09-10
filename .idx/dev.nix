@@ -8,6 +8,8 @@
   packages = [
     pkgs.jdk17 # Or a later version if preferred, e.g., pkgs.jdk21
     pkgs.maven # For building Spring Boot applications
+    pkgs.docker-compose
+    pkgs.docker
     # pkgs.maven # Uncomment if you prefer Maven over Gradle
   ];
 
@@ -27,7 +29,7 @@
         web = {
           # Example: run your Spring Boot application with PORT set to IDX's defined port for previews,
           # and show it in IDX's web preview panel
-          command = ["mvn" "-pl" "api-gateway" "spring-boot:run"]; # Or ["mvn" "spring-boot:run"] if using Maven
+          command = [ "cd" "frontend-service" "&&" "mvn" "spring-boot:run"]; # Or ["mvn" "spring-boot:run"] if using Maven
           manager = "web";
           env = {
             # Environment variables to set for your server

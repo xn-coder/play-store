@@ -53,31 +53,19 @@ public class WebSecurityConfig {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
     	return http
-//    			.cors(cors -> cors.configurationSource(request -> {
-//                    var corsConfiguration = new org.springframework.web.cors.CorsConfiguration();
-//                    corsConfiguration.setAllowedOriginPatterns(java.util.List.of("*"));
-//                    corsConfiguration.setAllowedMethods(java.util.List.of("*"));
-//                    corsConfiguration.setAllowedHeaders(java.util.List.of("*"));
-//                    corsConfiguration.setAllowCredentials(true);
-//                    return corsConfiguration;
-//                }))
                 .csrf(csrf -> csrf.disable())
                 .exceptionHandling(exception -> exception.authenticationEntryPoint(unauthorizedHandler))
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-//                .authorizeHttpRequests(authorize -> authorize
-//	                .requestMatchers("/api/users/auth/**").permitAll()
-//	                .requestMatchers("/api/users/health").permitAll()
-//	                .requestMatchers("/api/users/reviews/app/**").permitAll()
-//	                .requestMatchers("/h2-console/**").permitAll()
-//	                .requestMatchers("/swagger-ui/**", "/v3/api-docs/**").permitAll()
-//	                 .anyRequest().authenticated()
-//                )
                 .authorizeHttpRequests(authorize -> authorize
     	                .requestMatchers("/api/**").permitAll()
     	                .requestMatchers("/h2-console/**").permitAll()
     	                .requestMatchers("/swagger-ui/**", "/v3/api-docs/**").permitAll()
     	                 .anyRequest().authenticated()
                     )
+                .formLogin(form -> form
+                    .successHandler((req, res, auth) -> res.setStatus(200))
+                    .failureHandler((req, res, ex) -> res.setStatus(401))
+                )
                 .authenticationProvider(authenticationProvider())
                 .addFilterBefore(authenticationJwtTokenFilter(), UsernamePasswordAuthenticationFilter.class)
                 .build();

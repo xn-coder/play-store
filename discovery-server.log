@@ -1,1 +1,8 @@
-./run-services.sh: line 10: mvn: command not found
+[INFO] Scanning for projects...
+[INFO] 
+[INFO] -------------------< com.playstore:discovery-server >-------------------
+[INFO] Building discovery-server 1.0.0
+[INFO]   from pom.xml
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO] 
+[INFO] >>> spring-boot:3.2.1:run (default-cli) > test-compile @ discovery-server >>>

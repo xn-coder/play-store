@@ -4,8 +4,9 @@
 
     <parent>
         <groupId>com.playstore</groupId>
-        <artifactId>playstore-microservices</artifactId>
+        <artifactId>play-store-parent</artifactId>
         <version>1.0-SNAPSHOT</version>
+        <relativePath>../pom.xml</relativePath>
     </parent>
 
     <artifactId>search-service</artifactId>

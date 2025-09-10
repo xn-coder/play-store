@@ -11,6 +11,14 @@ spring:
           uri: lb://owner-service
           predicates:
             - Path=/owner/**
+        - id: user-service
+          uri: lb://user-service
+          predicates:
+            - Path=/user/**
+        - id: notification-service
+          uri: lb://notification-service
+          predicates:
+            - Path=/notification/**
         - id: search-service
           uri: lb://search-service
           predicates:

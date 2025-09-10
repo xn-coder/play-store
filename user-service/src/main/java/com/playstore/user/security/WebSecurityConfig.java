@@ -52,14 +52,15 @@ public class WebSecurityConfig {
     
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-        http.cors(cors -> cors.configurationSource(request -> {
-                    var corsConfiguration = new org.springframework.web.cors.CorsConfiguration();
-                    corsConfiguration.setAllowedOriginPatterns(java.util.List.of("*"));
-                    corsConfiguration.setAllowedMethods(java.util.List.of("*"));
-                    corsConfiguration.setAllowedHeaders(java.util.List.of("*"));
-                    corsConfiguration.setAllowCredentials(true);
-                    return corsConfiguration;
-                }))
+    	return http
+//    			.cors(cors -> cors.configurationSource(request -> {
+//                    var corsConfiguration = new org.springframework.web.cors.CorsConfiguration();
+//                    corsConfiguration.setAllowedOriginPatterns(java.util.List.of("*"));
+//                    corsConfiguration.setAllowedMethods(java.util.List.of("*"));
+//                    corsConfiguration.setAllowedHeaders(java.util.List.of("*"));
+//                    corsConfiguration.setAllowCredentials(true);
+//                    return corsConfiguration;
+//                }))
                 .csrf(csrf -> csrf.disable())
                 .exceptionHandling(exception -> exception.authenticationEntryPoint(unauthorizedHandler))
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
@@ -73,8 +74,8 @@ public class WebSecurityConfig {
                 )
                 .authenticationProvider(authenticationProvider())
                 .addFilterBefore(authenticationJwtTokenFilter(), UsernamePasswordAuthenticationFilter.class)
-                .headers(headers -> headers.frameOptions().sameOrigin());
-        
-        return http.build();
+                .headers(headers -> headers.frameOptions().sameOrigin())
+                .build();
+                
     }
 }

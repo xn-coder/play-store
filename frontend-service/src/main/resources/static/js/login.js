@@ -1,6 +1,23 @@
+
 document.addEventListener('DOMContentLoaded', function() {
+    const userToggle = document.getElementById('userToggle');
+    const ownerToggle = document.getElementById('ownerToggle');
     const userLoginForm = document.getElementById('userLoginForm');
     const ownerLoginForm = document.getElementById('ownerLoginForm');
+
+    userToggle.addEventListener('click', () => {
+        userToggle.classList.add('active');
+        ownerToggle.classList.remove('active');
+        userLoginForm.style.display = 'block';
+        ownerLoginForm.style.display = 'none';
+    });
+
+    ownerToggle.addEventListener('click', () => {
+        ownerToggle.classList.add('active');
+        userToggle.classList.remove('active');
+        ownerLoginForm.style.display = 'block';
+        userLoginForm.style.display = 'none';
+    });
 
     userLoginForm.addEventListener('submit', function(e) {
         e.preventDefault();
@@ -17,7 +34,7 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 
     function login(email, password, type) {
-        const url = type === 'user' ? `/api/users/auth/login` : `/api/owners/auth/login`;
+        const url = type === 'user' ? `${config.apiGatewayUrl}/api/users/auth/login` : `${config.apiGatewayUrl}/api/owners/auth/login`;
 
         fetch(url, {
             method: 'POST',
@@ -34,10 +51,8 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         })
         .then(data => {
-            // Store the token in local storage or session storage
             localStorage.setItem('token', data.token);
             localStorage.setItem('userType', type);
-            // Redirect to the home page
             window.location.href = '/';
         })
         .catch(error => {

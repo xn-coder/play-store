@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -18,22 +19,28 @@
             <a href="#" id="logoutButton" style="display: none;">Logout</a>
         </nav>
     </header>
-
     <main>
         <section class="search-bar">
-            <input type="text" id="searchInput" placeholder="Search for apps...">
+            <input type="text" id="searchInput" placeholder="Search for apps & games">
             <button id="searchButton">Search</button>
         </section>
 
-        <section class="app-list" id="appList">
-            <!-- App items will be dynamically loaded here -->
+        <section class="featured-apps">
+            <h2>Featured Apps</h2>
+            <div class="app-list" id="featuredAppList">
+                <!-- Featured app items will be dynamically loaded here -->
+            </div>
+        </section>
+        <section class="app-list-container">
+            <h2>All Apps</h2>
+            <div class="app-list" id="appList">
+                <!-- App items will be dynamically loaded here -->
+            </div>
         </section>
     </main>
-
     <footer>
         <p>&copy; 2024 Play Store. All rights reserved.</p>
     </footer>
-
     <script src="/js/config.js"></script>
     <script src="/js/app.js"></script>
 </body>

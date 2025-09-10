@@ -16,6 +16,7 @@
         <module>user-service</module>
         <module>owner-service</module>
         <module>notification-service</module>
+        <module>frontend-service</module>
     </modules>
 
     <properties>

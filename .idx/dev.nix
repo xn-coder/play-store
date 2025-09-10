@@ -1,31 +1,55 @@
+# To learn more about how to use Nix to configure your environment
+# see: https://firebase.google.com/docs/studio/customize-workspace
 { pkgs, ... }: {
   # Which nixpkgs channel to use.
-  channel = "stable-23.11"; # or "unstable"
+  channel = "stable-24.05"; # or "unstable"
+
   # Use https://search.nixos.org/packages to find packages
   packages = [
-    pkgs.git
-    pkgs.maven
-    pkgs.jdk17
+    pkgs.jdk17 # Or a later version if preferred, e.g., pkgs.jdk21
+    pkgs.maven # For building Spring Boot applications
+    # pkgs.maven # Uncomment if you prefer Maven over Gradle
   ];
+
   # Sets environment variables in the workspace
   env = {};
-  # Fast nix daemon for faster nix-shell times
-  services.nix-daemon.enable = true;
+  idx = {
+    # Search for the extensions you want on https://open-vsx.org/ and use "publisher.id"
+    extensions = [
+      "vscjava.vscode-java-pack" # Includes Language Support for Java, Debugger, Test Runner, etc.
+      "Pivotal.vscode-boot-dev-pack" # Spring Boot Tools
+    ];
 
-  # The following longer example sets up a Spring Boot web server preview.
-  #
-  # For more details, see https://developers.google.com/idx/guides/previews
-  previews = {
-    enable = true;
+    # Enable previews
     previews = {
-      web = {
-        # The command to run your app
-        command = [ "mvn" "-pl" "api-gateway" "spring-boot:run" ];
-        # The port your app listens on
-        manager = "web";
-        env = {
-          PORT = "$PORT";
+      enable = true;
+      previews = {
+        web = {
+          # Example: run your Spring Boot application with PORT set to IDX's defined port for previews,
+          # and show it in IDX's web preview panel
+          command = ["mvn" "-pl" "api-gateway" "spring-boot:run"]; # Or ["mvn" "spring-boot:run"] if using Maven
+          manager = "web";
+          env = {
+            # Environment variables to set for your server
+            PORT = "$PORT";
+          };
         };
+      };
+    };
+
+    # Workspace lifecycle hooks
+    workspace = {
+      # Runs when a workspace is first created
+      onCreate = {
+        # Example: if your project has a Gradle wrapper, ensure it's executable
+        make-gradlew-executable = "chmod +x gradlew || true"; # '|| true' to prevent failure if gradlew doesn't exist yet
+        # Example: If you need to download Gradle dependencies initially
+        # gradle-clean-build = "./gradlew clean build || true";
+      };
+      # Runs when the workspace is (re)started
+      onStart = {
+        # You might not need specific onStart commands for Spring Boot unless you have
+        # background tasks (e.g., specific watch tasks or database migrations).
       };
     };
   };

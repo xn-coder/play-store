@@ -406,4 +406,16 @@ Caused by: java.lang.IllegalStateException: Cannot load driver class: org.h2.Dri
 [INFO] Finished at: 2025-09-11T02:57:18+05:30
 [INFO] ------------------------------------------------------------------------
 
+I:\play-store\user-service>From https://github.com/xn-coder/play-store
+ * branch            main       -> FETCH_HEAD
+fatal: stash failed
+
+I:\play-store\user-service>'the' is not recognized as an internal or external command,
+operable program or batch file.
+
+I:\play-store\user-service>
+
+I:\play-store\user-service>'kill' is not recognized as an internal or external command,
+operable program or batch file.
+
 I:\play-store\user-service>

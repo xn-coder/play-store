@@ -139,3 +139,10 @@
 2025-09-11T03:40:49.923+05:30  INFO 10488 --- [a-EvictionTimer] c.n.e.registry.AbstractInstanceRegistry  : Running the evict task with compensationTime 0ms
 2025-09-11T03:41:48.710+05:30  INFO 10488 --- [hresholdUpdater] c.n.e.r.PeerAwareInstanceRegistryImpl    : Current renewal threshold is : 1
 2025-09-11T03:41:49.924+05:30  INFO 10488 --- [a-EvictionTimer] c.n.e.registry.AbstractInstanceRegistry  : Running the evict task with compensationTime 0ms
+2025-09-11T03:42:49.924+05:30  INFO 10488 --- [a-EvictionTimer] c.n.e.registry.AbstractInstanceRegistry  : Running the evict task with compensationTime 0ms
+2025-09-11T03:43:49.925+05:30  INFO 10488 --- [a-EvictionTimer] c.n.e.registry.AbstractInstanceRegistry  : Running the evict task with compensationTime 1ms
+2025-09-11T03:44:49.926+05:30  INFO 10488 --- [a-EvictionTimer] c.n.e.registry.AbstractInstanceRegistry  : Running the evict task with compensationTime 0ms
+2025-09-11T03:45:49.927+05:30  INFO 10488 --- [a-EvictionTimer] c.n.e.registry.AbstractInstanceRegistry  : Running the evict task with compensationTime 0ms
+2025-09-11T03:46:49.927+05:30  INFO 10488 --- [a-EvictionTimer] c.n.e.registry.AbstractInstanceRegistry  : Running the evict task with compensationTime 0ms
+2025-09-11T03:47:49.938+05:30  INFO 10488 --- [a-EvictionTimer] c.n.e.registry.AbstractInstanceRegistry  : Running the evict task with compensationTime 10ms
+2025-09-11T03:48:49.951+05:30  INFO 10488 --- [a-EvictionTimer] c.n.e.registry.AbstractInstanceRegistry  : Running the evict task with compensationTime 13ms

@@ -10,9 +10,8 @@ if %errorlevel% neq 0 (
     echo Java: Not Found. Please install Java 17 or higher.
     exit /b 1
 ) else (
-    for /f "tokens=2 delims=^"" %%a in ('java -version 2^>^&1 ^| findstr "version" ') do (
-        echo Java: Found (%%a^)
-    )
+    echo Java: Found
+    java -version
 )
 
 REM Check for Maven
@@ -21,9 +20,8 @@ if %errorlevel% neq 0 (
     echo Maven: Not Found. Please install Maven 3.6 or higher.
     exit /b 1
 ) else (
-    for /f "tokens=3" %%a in ('mvn -version 2^>^&1 ^| findstr "Apache Maven" ') do (
-        echo Maven: Found (%%a^)
-    )
+    echo Maven: Found
+    mvn -version
 )
 
 echo.

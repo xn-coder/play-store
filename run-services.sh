@@ -28,6 +28,5 @@ start_service "owner-service"
 start_service "user-service"
 start_service "notification-service"
 start_service "search-service"
-start_service "frontend-service"
 
 echo "All services started successfully!"

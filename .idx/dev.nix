@@ -27,7 +27,7 @@
         web = {
           # Example: run your Spring Boot application with PORT set to IDX's defined port for previews,
           # and show it in IDX's web preview panel
-          command = ["mvn" "-pl" "api-gateway" "spring-boot:run"]; # Or ["mvn" "spring-boot:run"] if using Maven
+          command = ["mvn" "frontend-service" "spring-boot:run"]; # Or ["mvn" "spring-boot:run"] if using Maven
           manager = "web";
           env = {
             # Environment variables to set for your server

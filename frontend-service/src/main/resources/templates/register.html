@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register</title>
+    <link rel="stylesheet" href="/css/styles.css">
+</head>
+<body>
+    <header>
+        <h1>Play Store</h1>
+        <nav>
+            <a href="/">Home</a>
+            <a href="/login">Login</a>
+        </nav>
+    </header>
+
+    <main>
+        <section class="register-form">
+            <h2>User Registration</h2>
+            <form id="userRegisterForm">
+                <input type="text" id="userName" placeholder="Name" required>
+                <input type="email" id="userEmail" placeholder="Email" required>
+                <input type="password" id="userPassword" placeholder="Password" required>
+                <button type="submit">Register</button>
+            </form>
+        </section>
+
+        <section class="register-form">
+            <h2>Owner Registration</h2>
+            <form id="ownerRegisterForm">
+                <input type="text" id="ownerName" placeholder="Name" required>
+                <input type="email" id="ownerEmail" placeholder="Email" required>
+                <input type="password" id="ownerPassword" placeholder="Password" required>
+                <button type="submit">Register</button>
+            </form>
+        </section>
+    </main>
+
+    <footer>
+        <p>&copy; 2024 Play Store. All rights reserved.</p>
+    </footer>
+
+    <script src="/js/config.js"></script>
+    <script src="/js/register.js"></script>
+</body>
+</html>

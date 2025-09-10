@@ -4,14 +4,14 @@
 
     <parent>
         <groupId>com.playstore</groupId>
-        <artifactId>play-store-parent</artifactId>
-        <version>1.0.0</version>
+        <artifactId>playstore-microservices</artifactId>
+        <version>1.0-SNAPSHOT</version>
     </parent>
 
-    <artifactId>api-gateway</artifactId>
+    <artifactId>search-service</artifactId>
     <packaging>jar</packaging>
 
-    <name>api-gateway</name>
+    <name>search-service</name>
     <url>http://maven.apache.org</url>
 
     <properties>
@@ -20,14 +20,17 @@
 
     <dependencies>
         <dependency>
-            <groupId>org.springframework.cloud</groupId>
-            <artifactId>spring-cloud-starter-gateway</artifactId>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-web</artifactId>
         </dependency>
         <dependency>
-            <groupId>org.springframework.cloud</groupId>
-            <artifactId>spring-cloud-starter-netflix-eureka-client</artifactId>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-data-elasticsearch</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <optional>true</optional>
         </dependency>
     </dependencies>
-
-
 </project>

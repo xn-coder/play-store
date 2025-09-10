@@ -1,20 +1,14 @@
 package com.playstore.owner_service.repository;
 
-<<<<<<< HEAD
 import com.playstore.owner_service.entity.App;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
-=======
-import com.playstore.owner_service.entity.Application;
-import org.springframework.data.jpa.repository.JpaRepository;
->>>>>>> ec1be3d313ee1c39d35ac9b91ab529fa692841fb
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
 @Repository
-<<<<<<< HEAD
 public interface AppRepository extends JpaRepository<App, Long> {
     
     List<App> findByVisibleTrue();
@@ -29,8 +23,3 @@ public interface AppRepository extends JpaRepository<App, Long> {
     @Query("SELECT a FROM App a WHERE a.visible = true ORDER BY a.downloadCount DESC")
     List<App> findVisibleAppsOrderByDownloadCountDesc();
 }
-=======
-public interface AppRepository extends JpaRepository<Application, Long> {
-    List<Application> findByOwnerId(Long ownerId);
-}
->>>>>>> ec1be3d313ee1c39d35ac9b91ab529fa692841fb

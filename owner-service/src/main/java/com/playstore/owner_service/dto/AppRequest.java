@@ -1,6 +1,5 @@
 package com.playstore.owner_service.dto;
 
-<<<<<<< HEAD
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 
@@ -52,17 +51,4 @@ public class AppRequest {
     
     public Boolean getVisible() { return visible; }
     public void setVisible(Boolean visible) { this.visible = visible; }
-=======
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-
-@Data
-@AllArgsConstructor
-@NoArgsConstructor
-public class AppRequest {
-    private String name;
-    private String description;
-    private String category;
->>>>>>> ec1be3d313ee1c39d35ac9b91ab529fa692841fb
 }

@@ -1,6 +1,6 @@
 package com.playstore.owner_service;
 
-import com.playstore.owner_service.config.WebSecurityConfig;
+import com.playstore.owner_service.security.WebSecurityConfig;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.cloud.openfeign.EnableFeignClients;

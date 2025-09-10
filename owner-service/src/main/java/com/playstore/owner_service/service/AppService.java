@@ -106,6 +106,19 @@ public class AppService {
         App updatedApp = appRepository.save(app);
         return new AppResponse(updatedApp);
     }
+
+    public AppResponse publishApp(Long id, Long ownerId) {
+        App app = appRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("App not found with id: " + id));
+        
+        if (!app.getOwnerId().equals(ownerId)) {
+            throw new RuntimeException("You can only publish your own apps");
+        }
+        
+        app.setIsPublished(true);
+        App updatedApp = appRepository.save(app);
+        return new AppResponse(updatedApp);
+    }
     
     public AppResponse incrementDownloadCount(Long id) {
         App app = appRepository.findById(id)

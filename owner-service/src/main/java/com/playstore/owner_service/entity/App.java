@@ -32,6 +32,9 @@ public class App {
     
     @Column(name = "is_visible")
     private Boolean visible = true;
+
+    @Column(name = "is_published")
+    private Boolean isPublished = false;
     
     @Column(name = "download_count")
     private Long downloadCount = 0L;
@@ -85,6 +88,9 @@ public class App {
     
     public Boolean getVisible() { return visible; }
     public void setVisible(Boolean visible) { this.visible = visible; }
+
+    public Boolean getIsPublished() { return isPublished; }
+    public void setIsPublished(Boolean isPublished) { this.isPublished = isPublished; }
     
     public Long getDownloadCount() { return downloadCount; }
     public void setDownloadCount(Long downloadCount) { this.downloadCount = downloadCount; }

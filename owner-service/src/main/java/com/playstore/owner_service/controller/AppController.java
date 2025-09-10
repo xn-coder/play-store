@@ -129,4 +129,19 @@ public class AppController {
             return ResponseEntity.badRequest().build();
         }
     }
+
+    @PutMapping("/{id}/publish")
+    @Operation(summary = "Publish an app (authenticated)")
+    public ResponseEntity<AppResponse> publishApp(@PathVariable Long id,
+                                                  @RequestHeader(value = "X-Owner-Id", required = false) Long ownerId) {
+        if (ownerId == null) {
+            return ResponseEntity.badRequest().build();
+        }
+        try {
+            AppResponse app = appService.publishApp(id, ownerId);
+            return ResponseEntity.ok(app);
+        } catch (RuntimeException e) {
+            return ResponseEntity.badRequest().build();
+        }
+    }
 }

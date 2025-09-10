@@ -1,6 +1,6 @@
-package com.playstore.user.security;
+package com.playstore.owner_service.security;
 
-import com.playstore.user.service.UserDetailsServiceImpl;
+import com.playstore.owner_service.service.UserDetailsServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

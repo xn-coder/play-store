@@ -1,55 +1,53 @@
 @echo off
-echo Checking Play Store Services Status...
-echo.
 
-echo Checking Eureka Server (Port 8761)...
-curl -s http://localhost:8761/actuator/health >nul 2>&1
-if errorlevel 1 (
-    echo ❌ Eureka Server - Not Running
+echo *************************************************
+echo ***           Checking Service Health       ***
+echo *************************************************
+
+REM Check Eureka Server
+curl -s http://localhost:8761/actuator/health | findstr "UP"
+if %errorlevel% neq 0 (
+    echo Eureka Server: DOWN
 ) else (
-    echo ✅ Eureka Server - Running
+    echo Eureka Server: UP
 )
 
-echo Checking User Service (Port 8081)...
-curl -s http://localhost:8081/actuator/health >nul 2>&1
-if errorlevel 1 (
-    echo ❌ User Service - Not Running
+REM Check Config Server
+curl -s http://localhost:8888/actuator/health | findstr "UP"
+if %errorlevel% neq 0 (
+    echo Config Server: DOWN
 ) else (
-    echo ✅ User Service - Running
+    echo Config Server: UP
 )
 
-echo Checking Owner Service (Port 8082)...
-curl -s http://localhost:8082/actuator/health >nul 2>&1
-if errorlevel 1 (
-    echo ❌ Owner Service - Not Running
+REM Check API Gateway
+curl -s http://localhost:8080/actuator/health | findstr "UP"
+if %errorlevel% neq 0 (
+    echo API Gateway: DOWN
 ) else (
-    echo ✅ Owner Service - Running
+    echo API Gateway: UP
 )
 
-echo Checking Notification Service (Port 8083)...
-curl -s http://localhost:8083/api/notifications/health >nul 2>&1
-if errorlevel 1 (
-    echo ❌ Notification Service - Not Running
+REM Check User Service
+curl -s http://localhost:8081/actuator/health | findstr "UP"
+if %errorlevel% neq 0 (
+    echo User Service: DOWN
 ) else (
-    echo ✅ Notification Service - Running
+    echo User Service: UP
 )
 
-echo Checking API Gateway (Port 8080)...
-curl -s http://localhost:8080/actuator/health >nul 2>&1
-if errorlevel 1 (
-    echo ❌ API Gateway - Not Running
+REM Check Owner Service
+curl -s http://localhost:8082/actuator/health | findstr "UP"
+if %errorlevel% neq 0 (
+    echo Owner Service: DOWN
 ) else (
-    echo ✅ API Gateway - Running
+    echo Owner Service: UP
 )
 
-echo Checking Frontend (Port 3000)...
-curl -s http://localhost:3000 >nul 2>&1
-if errorlevel 1 (
-    echo ❌ Frontend - Not Running
+REM Check Notification Service
+curl -s http://localhost:8083/actuator/health | findstr "UP"
+if %errorlevel% neq 0 (
+    echo Notification Service: DOWN
 ) else (
-    echo ✅ Frontend - Running
+    echo Notification Service: UP
 )
-
-echo.
-echo Service check complete!
-pause

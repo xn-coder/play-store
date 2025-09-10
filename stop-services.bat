@@ -1,16 +1,10 @@
 @echo off
-echo Stopping Play Store Microservices...
 
-REM Kill Java processes related to our services
-echo Stopping Spring Boot services...
-taskkill /f /im java.exe 2>nul
-echo Spring Boot services stopped.
+echo *************************************************
+echo ***           Stopping All Services         ***
+echo *************************************************
 
-REM Kill Python HTTP server
-echo Stopping Frontend server...
-taskkill /f /im python.exe 2>nul
-echo Frontend server stopped.
+REM Find and kill all Java processes
+taskkill /F /IM java.exe /T >nul
 
-echo.
-echo All services stopped.
-pause
+echo All Java processes have been terminated.

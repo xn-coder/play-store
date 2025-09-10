@@ -1,11 +1,139 @@
-
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Play Store</title>
-    <link rel="stylesheet" th:href="@{/css/styles.css}">
+    <title>App Store</title>
+    <!-- <link rel="stylesheet" href="css/styles.css"> -->
+    <style>
+        
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap');
+
+:root {
+    --primary-color: #007BFF;
+    --secondary-color: #6C757D;
+    --background-color: #f8f9fa;
+    --text-color: #212529;
+    --card-background: #ffffff;
+    --card-border: #dee2e6;
+    --shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+body {
+    font-family: 'Montserrat', sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: var(--background-color);
+    color: var(--text-color);
+}
+
+header {
+    background-color: var(--primary-color);
+    color: #fff;
+    padding: 2rem;
+    text-align: center;
+    box-shadow: var(--shadow);
+}
+
+header h1 {
+    margin: 0;
+    font-size: 2.5rem;
+    font-weight: 700;
+}
+
+nav a {
+    color: #fff;
+    text-decoration: none;
+    margin: 0 1.5rem;
+    font-size: 1.1rem;
+    transition: color 0.3s;
+}
+
+nav a:hover {
+    color: #f8f9fa;
+}
+
+.search-bar {
+    padding: 2rem;
+    text-align: center;
+    background-color: #fff;
+    box-shadow: var(--shadow);
+    margin-bottom: 2rem;
+}
+
+.search-bar input {
+    width: 70%;
+    padding: 1rem;
+    border: 1px solid var(--card-border);
+    border-radius: 25px;
+    font-size: 1rem;
+}
+
+.search-bar button {
+    padding: 1rem 2rem;
+    cursor: pointer;
+    background-color: var(--primary-color);
+    color: #fff;
+    border: none;
+    border-radius: 25px;
+    font-size: 1rem;
+    margin-left: 1rem;
+    transition: background-color 0.3s;
+}
+
+.search-bar button:hover {
+    background-color: #0056b3;
+}
+
+.app-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 2rem;
+    padding: 2rem;
+    justify-content: center;
+}
+
+.app-item {
+    background-color: var(--card-background);
+    border: 1px solid var(--card-border);
+    border-radius: 15px;
+    padding: 1.5rem;
+    text-align: center;
+    box-shadow: var(--shadow);
+    transition: transform 0.3s, box-shadow 0.3s;
+}
+
+.app-item:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+}
+
+.app-item img {
+    width: 120px;
+    height: 120px;
+    margin-bottom: 1.5rem;
+    border-radius: 20px;
+}
+
+.app-item h3 {
+    margin: 0.5rem 0;
+    font-size: 1.25rem;
+}
+
+.app-item p {
+    color: var(--secondary-color);
+    font-size: 0.9rem;
+}
+
+footer {
+    text-align: center;
+    padding: 2rem;
+    background-color: var(--primary-color);
+    color: #fff;
+    margin-top: 2rem;
+}
+
+    </style>
 </head>
 <body>
     <header>
@@ -19,29 +147,165 @@
             <a href="#" id="logoutButton" style="display: none;">Logout</a>
         </nav>
     </header>
-    <main>
-        <section class="search-bar">
-            <input type="text" id="searchInput" placeholder="Search for apps & games">
-            <button id="searchButton">Search</button>
-        </section>
 
+    <main class="container">
         <section class="featured-apps">
             <h2>Featured Apps</h2>
-            <div class="app-list" id="featuredAppList">
-                <!-- Featured app items will be dynamically loaded here -->
-            </div>
+            <div id="featuredAppList" class="app-grid"></div>
         </section>
+
         <section class="app-list-container">
             <h2>All Apps</h2>
-            <div class="app-list" id="appList">
-                <!-- App items will be dynamically loaded here -->
-            </div>
+            <div id="appList" class="app-grid"></div>
         </section>
+
+        <button id="publishAppButton" style="display: none;">Publish New App</button>
+
+        <form id="publishAppForm" style="display: none;">
+            <h3>Publish New App</h3>
+            <input type="text" id="appName" placeholder="App Name" required>
+            <textarea id="appDescription" placeholder="App Description" required></textarea>
+            <input type="text" id="appCategory" placeholder="Category" required>
+            <button type="submit">Publish</button>
+        </form>
     </main>
+
     <footer>
         <p>&copy; 2024 Play Store. All rights reserved.</p>
     </footer>
-    <script th:src="@{/js/config.js}"></script>
-    <script th:src="@{/js/app.js}"></script>
+
+    <!-- <script src="js/config.js"></script> -->
+    <script>
+        
+document.addEventListener('DOMContentLoaded', function() {
+    const searchButton = document.getElementById('searchButton');
+    const searchInput = document.getElementById('searchInput');
+    const appList = document.getElementById('appList');
+    const featuredAppList = document.getElementById('featuredAppList');
+    const loginLink = document.getElementById('loginLink');
+    const registerLink = document.getElementById('registerLink');
+    const logoutButton = document.getElementById('logoutButton');
+    const publishAppForm = document.getElementById('publishAppForm');
+    const publishAppButton = document.getElementById('publishAppButton');
+
+    let allApps = JSON.parse(localStorage.getItem('apps')) || [];
+
+    const token = localStorage.getItem('token');
+    const userType = localStorage.getItem('userType');
+
+    if (token) {
+        loginLink.style.display = 'none';
+        registerLink.style.display = 'none';
+        logoutButton.style.display = 'block';
+        if (userType === 'owner') {
+            publishAppButton.style.display = 'block';
+        }
+    } else {
+        publishAppButton.style.display = 'none';
+    }
+
+    logoutButton.addEventListener('click', function() {
+        localStorage.removeItem('token');
+        localStorage.removeItem('userType');
+        window.location.reload();
+    });
+
+    publishAppButton.addEventListener('click', function() {
+        publishAppForm.style.display = 'block';
+    });
+
+    publishAppForm.addEventListener('submit', function(e) {
+        e.preventDefault();
+        const appName = document.getElementById('appName').value;
+        const appDescription = document.getElementById('appDescription').value;
+        const appCategory = document.getElementById('appCategory').value;
+        const newApp = { name: appName, description: appDescription, category: appCategory, owner: localStorage.getItem('userEmail') };
+        allApps.push(newApp);
+        localStorage.setItem('apps', JSON.stringify(allApps));
+        publishAppForm.style.display = 'none';
+        fetchAndDisplayApps();
+    });
+
+    function displayApps(apps, listElement) {
+        listElement.innerHTML = '';
+        if (apps.length === 0) {
+            listElement.innerHTML = '<p>No apps found.</p>';
+            return;
+        }
+        apps.forEach(app => {
+            const appItem = document.createElement('div');
+            appItem.className = 'app-item';
+            const iconUrl = app.iconUrl || '/images/default-icon.png';
+            appItem.innerHTML = `
+                <img src="${iconUrl}" alt="${app.name}">
+                <h3>${app.name}</h3>
+                <p>${app.category || 'General'}</p>
+                <button class="install-button" data-app-name="${app.name}">Install</button>
+            `;
+            listElement.appendChild(appItem);
+        });
+
+        document.querySelectorAll('.install-button').forEach(button => {
+            button.addEventListener('click', function() {
+                const appName = this.getAttribute('data-app-name');
+                installApp(appName);
+            });
+        });
+    }
+
+    function installApp(appName) {
+        if (!localStorage.getItem('token')) {
+            alert('Please login to install apps.');
+            return;
+        }
+        let installedApps = JSON.parse(localStorage.getItem('installedApps')) || [];
+        if (installedApps.includes(appName)) {
+            alert('App already installed.');
+        } else {
+            installedApps.push(appName);
+            localStorage.setItem('installedApps', JSON.stringify(installedApps));
+            alert('App installed successfully.');
+        }
+    }
+
+    function fetchAndDisplayApps() {
+        allApps = JSON.parse(localStorage.getItem('apps')) || [];
+        const featuredApps = allApps.slice(0, 4);
+        displayApps(featuredApps, featuredAppList);
+        displayApps(allApps, appList);
+    }
+
+    function searchApps(query) {
+        const normalizedQuery = query.toLowerCase();
+        const filteredApps = allApps.filter(app =>
+            app.name.toLowerCase().includes(normalizedQuery)
+        );
+        document.querySelector('.featured-apps').style.display = 'none';
+        const allAppsContainer = document.querySelector('.app-list-container');
+        allAppsContainer.querySelector('h2').textContent = `Search Results for "${query}"`;
+        displayApps(filteredApps, appList);
+    }
+
+    searchButton.addEventListener('click', function() {
+        const query = searchInput.value.trim();
+        if (query) {
+            searchApps(query);
+        } else {
+            document.querySelector('.featured-apps').style.display = 'block';
+            document.querySelector('.app-list-container h2').textContent = 'All Apps';
+            fetchAndDisplayApps();
+        }
+    });
+
+    searchInput.addEventListener('keyup', function(event) {
+        if (event.key === 'Enter') {
+            searchButton.click();
+        }
+    });
+
+    fetchAndDisplayApps();
+});
+
+    </script>
 </body>
 </html>

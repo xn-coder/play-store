@@ -1,0 +1,13 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Play Store</title>
+</head>
+<body>
+    <div th:replace="~{_header :: header}"></div>
+    <div class="container">
+        <div th:replace="${content}"></div>
+    </div>
+    <div th:replace="~{_footer :: footer}"></div>
+</body>
+</html>

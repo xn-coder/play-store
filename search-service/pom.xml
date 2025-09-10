@@ -5,7 +5,8 @@
     <parent>
         <groupId>com.playstore</groupId>
         <artifactId>play-store-parent</artifactId>
-        <version>1.0-SNAPSHOT</version>
+        <version>1.0.0</version>
+        <relativePath>../pom.xml</relativePath>
     </parent>
 
     <artifactId>search-service</artifactId>

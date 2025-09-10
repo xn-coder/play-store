@@ -64,17 +64,22 @@ public class WebSecurityConfig {
                 .csrf(csrf -> csrf.disable())
                 .exceptionHandling(exception -> exception.authenticationEntryPoint(unauthorizedHandler))
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+//                .authorizeHttpRequests(authorize -> authorize
+//	                .requestMatchers("/api/users/auth/**").permitAll()
+//	                .requestMatchers("/api/users/health").permitAll()
+//	                .requestMatchers("/api/users/reviews/app/**").permitAll()
+//	                .requestMatchers("/h2-console/**").permitAll()
+//	                .requestMatchers("/swagger-ui/**", "/v3/api-docs/**").permitAll()
+//	                 .anyRequest().authenticated()
+//                )
                 .authorizeHttpRequests(authorize -> authorize
-                .requestMatchers("/api/users/auth/**").permitAll()
-                .requestMatchers("/api/users/health").permitAll()
-                .requestMatchers("/api/users/reviews/app/**").permitAll()
-                .requestMatchers("/h2-console/**").permitAll()
-                .requestMatchers("/swagger-ui/**", "/v3/api-docs/**").permitAll()
-                 .anyRequest().authenticated()
-                )
+    	                .requestMatchers("/api/**").permitAll()
+    	                .requestMatchers("/h2-console/**").permitAll()
+    	                .requestMatchers("/swagger-ui/**", "/v3/api-docs/**").permitAll()
+    	                 .anyRequest().authenticated()
+                    )
                 .authenticationProvider(authenticationProvider())
                 .addFilterBefore(authenticationJwtTokenFilter(), UsernamePasswordAuthenticationFilter.class)
-                .headers(headers -> headers.frameOptions().sameOrigin())
                 .build();
                 
     }

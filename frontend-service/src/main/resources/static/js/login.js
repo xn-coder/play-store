@@ -34,30 +34,20 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 
     function login(email, password, type) {
-        const url = type === 'user' ? `${config.apiGatewayUrl}/api/users/auth/login` : `${config.apiGatewayUrl}/api/owners/auth/login`;
-
-        fetch(url, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({ email, password })
-        })
-        .then(response => {
-            if (response.ok) {
-                return response.json();
+        let users = localStorage.getItem(type + 's');
+        if (users) {
+            users = JSON.parse(users);
+            const user = users.find(u => u.email === email && u.password === password);
+            if (user) {
+                localStorage.setItem('token', 'dummy-token');
+                localStorage.setItem('userType', type);
+                localStorage.setItem('userEmail', email);
+                window.location.href = '/';
             } else {
-                throw new Error('Login failed');
+                alert('Invalid credentials');
             }
-        })
-        .then(data => {
-            localStorage.setItem('token', data.token);
-            localStorage.setItem('userType', type);
-            window.location.href = '/';
-        })
-        .catch(error => {
-            console.error('Error:', error);
-            alert(error.message);
-        });
+        } else {
+            alert('No users found. Please register first.');
+        }
     }
 });

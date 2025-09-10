@@ -36,30 +36,15 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 
     function register(name, email, password, type) {
-        const url = type === 'user' ? `${config.apiGatewayUrl}/api/users/auth/register` : `${config.apiGatewayUrl}/api/owners/auth/register`;
-
-        fetch(url, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({ name, email, password })
-        })
-        .then(response => {
-            if (response.ok) {
-                return response.json();
-            } else {
-                throw new Error('Registration failed');
-            }
-        })
-        .then(data => {
-            localStorage.setItem('token', data.token);
-            localStorage.setItem('userType', type);
-            window.location.href = '/';
-        })
-        .catch(error => {
-            console.error('Error:', error);
-            alert(error.message);
-        });
+        const user = { name, email, password };
+        let users = localStorage.getItem(type + 's');
+        if (users) {
+            users = JSON.parse(users);
+        } else {
+            users = [];
+        }
+        users.push(user);
+        localStorage.setItem(type + 's', JSON.stringify(users));
+        window.location.href = 'login.html';
     }
 });

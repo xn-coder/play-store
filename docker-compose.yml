@@ -1,4 +1,4 @@
-version: '3.8'
+8version: '3.8'
 
 services:
   discovery-server:
@@ -24,6 +24,22 @@ services:
     environment:
       - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres:5432/playstore
       - SPRING_JPA_HIBERNATE_DDL_AUTO=update
+
+  user-service:
+    build: ./user-service
+    ports:
+      - "8081:8081"
+    depends_on:
+      - discovery-server
+      - config-server
+
+  notification-service:
+    build: ./notification-service
+    ports:
+      - "8083:8083"
+    depends_on:
+      - discovery-server
+      - config-server
 
   search-service:
     build: ./search-service

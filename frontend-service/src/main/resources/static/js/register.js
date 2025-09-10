@@ -1,32 +1,32 @@
 document.addEventListener('DOMContentLoaded', function() {
-    const userRegisterForm = document.getElementById('userRegisterForm');
-    const ownerRegisterForm = document.getElementById('ownerRegisterForm');
+    const userRegistrationForm = document.getElementById('userRegistrationForm');
+    const ownerRegistrationForm = document.getElementById('ownerRegistrationForm');
 
-    userRegisterForm.addEventListener('submit', function(e) {
+    userRegistrationForm.addEventListener('submit', function(e) {
         e.preventDefault();
-        const name = document.getElementById('userName').value;
+        const username = document.getElementById('userUsername').value;
         const email = document.getElementById('userEmail').value;
         const password = document.getElementById('userPassword').value;
-        register(name, email, password, 'user');
+        register(username, email, password, 'user');
     });
 
-    ownerRegisterForm.addEventListener('submit', function(e) {
+    ownerRegistrationForm.addEventListener('submit', function(e) {
         e.preventDefault();
-        const name = document.getElementById('ownerName').value;
+        const username = document.getElementById('ownerUsername').value;
         const email = document.getElementById('ownerEmail').value;
         const password = document.getElementById('ownerPassword').value;
-        register(name, email, password, 'owner');
+        register(username, email, password, 'owner');
     });
 
-    function register(name, email, password, type) {
-        const url = type === 'user' ? `${USER_SERVICE_URL}/auth/register` : `${OWNER_SERVICE_URL}/auth/register`;
+    function register(username, email, password, type) {
+        const url = type === 'user' ? `/api/users/auth/register` : `/api/owners/auth/register`;
 
         fetch(url, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
             },
-            body: JSON.stringify({ name, email, password })
+            body: JSON.stringify({ username, email, password })
         })
         .then(response => {
             if (response.ok) {

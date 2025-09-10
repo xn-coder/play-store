@@ -17,7 +17,7 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 
     function login(email, password, type) {
-        const url = type === 'user' ? `${USER_SERVICE_URL}/auth/login` : `${OWNER_SERVICE_URL}/auth/login`;
+        const url = type === 'user' ? `/api/users/auth/login` : `/api/owners/auth/login`;
 
         fetch(url, {
             method: 'POST',

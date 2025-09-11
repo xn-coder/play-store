@@ -1,14 +1,260 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Apps - Play Store</title>
+  <style>
+    /* Reset */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      background: #f5f7fa;
+      color: #333;
+      line-height: 1.5;
+    }
+
+    /* Hero Section */
+    .hero {
+      background: linear-gradient(to right, #3498db, #2ecc71);
+      color: #fff;
+      text-align: center;
+      padding: 4rem 1.5rem;
+      border-bottom-left-radius: 40px;
+      border-bottom-right-radius: 40px;
+    }
+    .hero h1 {
+      font-size: 2.5rem;
+      margin-bottom: 1rem;
+      font-weight: 700;
+    }
+    .hero p {
+      font-size: 1.1rem;
+      margin-bottom: 2rem;
+    }
+    .hero input {
+      padding: 0.8rem 1.2rem;
+      border-radius: 30px;
+      border: none;
+      width: 300px;
+      max-width: 90%;
+      font-size: 1rem;
+      outline: none;
+    }
+
+    /* Container */
+    .container {
+      max-width: 1200px;
+      margin: 2rem auto;
+      padding: 0 1.5rem;
+    }
+
+    /* Section Title */
+    .section-title {
+      text-align: center;
+      font-size: 2rem;
+      font-weight: 600;
+      margin-bottom: 2rem;
+      color: #2c3e50;
+      position: relative;
+    }
+    .section-title::after {
+      content: "";
+      display: block;
+      width: 80px;
+      height: 3px;
+      background: #3498db;
+      margin: 0.5rem auto 0;
+      border-radius: 2px;
+    }
+
+    /* Grid */
+    .app-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+      gap: 1.5rem;
+    }
+
+    /* Card */
+    .app-card {
+      background: #fff;
+      border-radius: 12px;
+      box-shadow: 0 6px 18px rgba(0, 0, 0, 0.08);
+      overflow: hidden;
+      transition: transform 0.25s ease, box-shadow 0.25s ease;
+      display: flex;
+      flex-direction: column;
+    }
+    .app-card:hover {
+      transform: translateY(-6px);
+      box-shadow: 0 10px 22px rgba(0, 0, 0, 0.15);
+    }
+
+    .app-card-image {
+      width: 100%;
+      height: 180px;
+      background: #ecf0f1;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      overflow: hidden;
+    }
+    .app-card-image img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .app-card-content {
+      padding: 1.2rem;
+      flex-grow: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+    .app-card-title {
+      font-size: 1.2rem;
+      font-weight: 600;
+      margin-bottom: 0.4rem;
+      color: #2c3e50;
+    }
+    .app-card-description {
+      font-size: 0.9rem;
+      color: #666;
+      margin-bottom: 0.8rem;
+      line-height: 1.4;
+    }
+    .app-card-price {
+      font-size: 1rem;
+      font-weight: 600;
+      color: #27ae60;
+      margin-bottom: 1rem;
+      display: inline-block;
+    }
+
+    /* Buttons */
+    .app-card-actions {
+      display: flex;
+      gap: 0.6rem;
+    }
+    .app-card-actions button {
+      flex: 1;
+      padding: 0.6rem 0.9rem;
+      border-radius: 6px;
+      border: none;
+      cursor: pointer;
+      font-size: 0.9rem;
+      font-weight: 500;
+      transition: all 0.3s ease;
+    }
+    .app-card-actions button:not(.installed-btn) {
+      background: #3498db;
+      color: #fff;
+    }
+    .app-card-actions button:hover:not(.installed-btn) {
+      background: #2980b9;
+    }
+    .secondary-btn {
+      background: #ecf0f1;
+      color: #2c3e50;
+    }
+    .secondary-btn:hover {
+      background: #d5dbdb;
+    }
+    .installed-btn {
+      background: #95a5a6 !important;
+      color: #fff !important;
+      cursor: not-allowed !important;
+    }
+
+    /* Reviews Modal */
+    #reviews-modal {
+      display: none;
+      position: fixed;
+      z-index: 1000;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      overflow: auto;
+      background-color: rgba(0, 0, 0, 0.6);
+      backdrop-filter: blur(2px);
+    }
+    .modal-content {
+      background: #fff;
+      margin: 6% auto;
+      padding: 2rem;
+      border-radius: 12px;
+      width: 90%;
+      max-width: 600px;
+      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+      animation: fadeIn 0.3s ease-in-out;
+    }
+    .close-btn {
+      float: right;
+      font-size: 1.5rem;
+      cursor: pointer;
+      color: #7f8c8d;
+      transition: color 0.3s ease;
+    }
+    .close-btn:hover {
+      color: #2c3e50;
+    }
+    .review {
+      background: #f8f9fa;
+      padding: 0.8rem 1rem;
+      border-radius: 6px;
+      margin-bottom: 0.8rem;
+      font-size: 0.9rem;
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(-15px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+  </style>
+</head>
 <body data-page="apps">
     <div th:fragment="content">
+
+        <!-- Hero / Landing -->
+        <section class="hero">
+          <h1>Discover Amazing Apps</h1>
+          <p>Browse, install, and review apps in one place</p>
+          <input type="text" id="search-input" placeholder="Search apps...">
+        </section>
+
+        <!-- Apps Section -->
         <div class="container">
             <h2 class="section-title">All Apps</h2>
             <div class="app-grid" id="app-grid">
                 <!-- Apps will be dynamically loaded here -->
             </div>
         </div>
-        <script>
+
+        <!-- Modal -->
+        <div id="reviews-modal">
+          <div class="modal-content">
+            <span class="close-btn">&times;</span>
+            <div id="modal-reviews-content"></div>
+            <textarea id="modal-review-text" rows="3" style="width:100%; margin-top:1rem; padding:0.6rem; border-radius:6px; border:1px solid #ccc;" placeholder="Write your review..."></textarea>
+            <button id="modal-submit-review" style="margin-top:1rem; background:#3498db; color:#fff; border:none; padding:0.6rem 1.2rem; border-radius:6px; cursor:pointer;">Submit Review</button>
+          </div>
+        </div>
+
+        <!-- Your JS (unchanged) -->
+          <script>
             document.addEventListener('DOMContentLoaded', () => {
                 updateNav();
                 loadApps('Apps');
@@ -70,7 +316,7 @@
                 let reviewsHtml = '<h4>Reviews</h4>';
                 if (app.reviews && app.reviews.length > 0) {
                     app.reviews.forEach(review => {
-                        reviewsHtml += `<div class="review"><strong>${review.user}:</strong> ${review.comment}</div>`;
+                        reviewsHtml += <div class="review"><strong>${review.user}:</strong> ${review.comment}</div>;
                     });
                 } else {
                     reviewsHtml += '<p>No reviews yet.</p>';
@@ -168,7 +414,7 @@
                 }
                  Array.from(navLinks.children).forEach(link => link.firstChild.classList.remove('active'));
                 const page = document.body.getAttribute('data-page');
-                const activeLink = document.querySelector(`.nav-links a[href="/${page}"]`);
+                const activeLink = document.querySelector(.nav-links a[href="/${page}"]);
                 if (activeLink) {
                     activeLink.classList.add('active');
                 }
@@ -177,3 +423,5 @@
     </div>
 </body>
 </html>
+
+this is apps.html

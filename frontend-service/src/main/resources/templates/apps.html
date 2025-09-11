@@ -414,7 +414,7 @@
                 }
                  Array.from(navLinks.children).forEach(link => link.firstChild.classList.remove('active'));
                 const page = document.body.getAttribute('data-page');
-                const activeLink = document.querySelector(.nav-links a[href="/${page}"]);
+                const activeLink = document.querySelector('.nav-links a[href="/${page}"]');
                 if (activeLink) {
                     activeLink.classList.add('active');
                 }
@@ -423,5 +423,3 @@
     </div>
 </body>
 </html>
-
-this is apps.html

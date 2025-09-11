@@ -229,7 +229,7 @@
         searchButton.addEventListener("click", () => {
           const query = searchInput.value;
           if (query) {
-            window.location.href = /search?q=${encodeURIComponent(query)};
+            window.location.href = `/search?q=${encodeURIComponent(query)}`;
           }
         });
 

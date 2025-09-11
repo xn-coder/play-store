@@ -2,7 +2,7 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <body data-page="login">
     <div th:fragment="content">
-        <form id="login-form">
+        <form id="login-form" onsubmit="handleLogin(event)">
             <h2>Login</h2>
             <div>
                 <label for="username">Username</label>
@@ -18,31 +18,27 @@
     <script>
         document.addEventListener('DOMContentLoaded', () => {
             updateNav();
-            setupLoginForm();
         });
 
-        function setupLoginForm() {
-            const loginForm = document.getElementById('login-form');
-            loginForm.addEventListener('submit', (e) => {
-                e.preventDefault();
-                const username = document.getElementById('username').value;
-                const password = document.getElementById('password').value;
+        function handleLogin(e) {
+            e.preventDefault();
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
 
-                const users = JSON.parse(localStorage.getItem('users')) || [];
-                const user = users.find(u => u.username === username && u.password === password);
+            const users = JSON.parse(localStorage.getItem('users')) || [];
+            const user = users.find(u => u.username === username && u.password === password);
 
-                if (user) {
-                    localStorage.setItem('loggedInUser', JSON.stringify(user));
-                    alert('Login successful!');
-                    if (user.role === 'owner') {
-                        window.location.href = '/owner-dashboard';
-                    } else {
-                        window.location.href = '/';
-                    }
+            if (user) {
+                localStorage.setItem('loggedInUser', JSON.stringify(user));
+                alert('Login successful!');
+                if (user.role === 'owner') {
+                    window.location.href = '/owner-dashboard';
                 } else {
-                    alert('Invalid credentials!');
+                    window.location.href = '/';
                 }
-            });
+            } else {
+                alert('Invalid credentials!');
+            }
         }
 
         function isLoggedIn() {

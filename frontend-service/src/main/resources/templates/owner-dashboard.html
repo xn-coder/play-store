@@ -6,7 +6,7 @@
         <div class="dashboard-container">
             <div class="upload-app-form">
                 <h3>Upload New App</h3>
-                <form id="upload-app-form">
+                <form id="upload-app-form" onsubmit="handleUpload(event)">
                     <div>
                         <label for="app-name">App Name</label>
                         <input type="text" id="app-name" required>
@@ -55,35 +55,30 @@
                 window.location.href = '/login';
                 return;
             }
-            setupOwnerDashboard();
+            loadOwnerApps();
         });
 
-        function setupOwnerDashboard() {
-            const uploadForm = document.getElementById('upload-app-form');
-            uploadForm.addEventListener('submit', (e) => {
-                e.preventDefault();
-                const appName = document.getElementById('app-name').value;
-                const appDescription = document.getElementById('app-description').value;
-                const appPrice = parseFloat(document.getElementById('app-price').value);
-                const appCategory = document.getElementById('app-category').value;
-                const owner = JSON.parse(localStorage.getItem('loggedInUser'));
+        function handleUpload(e) {
+            e.preventDefault();
+            const appName = document.getElementById('app-name').value;
+            const appDescription = document.getElementById('app-description').value;
+            const appPrice = parseFloat(document.getElementById('app-price').value);
+            const appCategory = document.getElementById('app-category').value;
+            const owner = JSON.parse(localStorage.getItem('loggedInUser'));
 
-                const apps = JSON.parse(localStorage.getItem('apps')) || [];
-                apps.push({
-                    id: Date.now(),
-                    name: appName,
-                    description: appDescription,
-                    price: appPrice,
-                    category: appCategory,
-                    owner: owner.username
-                });
-                localStorage.setItem('apps', JSON.stringify(apps));
-                alert('App uploaded successfully!');
-                loadOwnerApps();
-                uploadForm.reset();
+            const apps = JSON.parse(localStorage.getItem('apps')) || [];
+            apps.push({
+                id: Date.now(),
+                name: appName,
+                description: appDescription,
+                price: appPrice,
+                category: appCategory,
+                owner: owner.username
             });
-
+            localStorage.setItem('apps', JSON.stringify(apps));
+            alert('App uploaded successfully!');
             loadOwnerApps();
+            document.getElementById('upload-app-form').reset();
         }
 
         function loadOwnerApps() {

@@ -45,6 +45,7 @@
             function loadFeaturedApps() {
                 const appGrid = document.querySelector('.featured-apps .app-grid');
                 const allApps = JSON.parse(localStorage.getItem('apps')) || [];
+                const loggedInUser = JSON.parse(localStorage.getItem('loggedInUser'));
 
                 appGrid.innerHTML = '';
 
@@ -56,6 +57,8 @@
                 allApps.forEach(app => {
                     const card = document.createElement('div');
                     card.className = 'app-card';
+                    const isInstalled = loggedInUser && loggedInUser.installedApps && loggedInUser.installedApps.includes(app.id);
+                    
                     card.innerHTML = `
                         <div class="app-card-image">
                            <img src="/images/app-icon.png" alt="${app.name}">
@@ -64,10 +67,38 @@
                             <h3 class="app-card-title">${app.name}</h3>
                             <p class="app-card-description">${app.description}</p>
                             <span class="app-card-price">$${app.price.toFixed(2)}</span>
+                            <div class="app-card-actions">
+                                <button onclick="installApp(${app.id})" ${isInstalled ? 'disabled class="installed-btn"': ''}>${isInstalled ? 'Installed' : 'Install'}</button>
+                            </div>
                         </div>
                     `;
                     appGrid.appendChild(card);
                 });
+            }
+
+            function installApp(appId) {
+                const loggedInUser = JSON.parse(localStorage.getItem('loggedInUser'));
+                if (!loggedInUser) {
+                    alert('You must be logged in to install apps.');
+                    window.location.href = '/login';
+                    return;
+                }
+
+                if (!loggedInUser.installedApps) {
+                    loggedInUser.installedApps = [];
+                }
+
+                loggedInUser.installedApps.push(appId);
+                localStorage.setItem('loggedInUser', JSON.stringify(loggedInUser));
+
+                const users = JSON.parse(localStorage.getItem('users')) || [];
+                const userIndex = users.findIndex(u => u.username === loggedInUser.username);
+                if (userIndex !== -1) {
+                    users[userIndex] = loggedInUser;
+                    localStorage.setItem('users', JSON.stringify(users));
+                }
+
+                loadFeaturedApps();
             }
 
             function isLoggedIn() {

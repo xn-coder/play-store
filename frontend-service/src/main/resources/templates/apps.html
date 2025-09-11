@@ -62,8 +62,15 @@
             function openReviewsModal(appId) {
                 const modal = document.getElementById('reviews-modal');
                 const modalReviewsContent = document.getElementById('modal-reviews-content');
-                const modalSubmitReviewBtn = document.getElementById('modal-submit-review');
-                
+                const reviewForm = document.getElementById('modal-review-form');
+                const loggedInUser = JSON.parse(localStorage.getItem('loggedInUser'));
+
+                if (loggedInUser && loggedInUser.role === 'owner') {
+                    reviewForm.style.display = 'none';
+                } else {
+                    reviewForm.style.display = 'block';
+                }
+
                 const allApps = JSON.parse(localStorage.getItem('apps')) || [];
                 const app = allApps.find(a => a.id === appId);
 
@@ -79,7 +86,7 @@
                 
                 modal.style.display = 'block';
 
-                modalSubmitReviewBtn.onclick = () => addReview(appId);
+                document.getElementById('modal-submit-review').onclick = () => addReview(appId);
             }
 
             function addReview(appId) {

@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-<body>
+<body data-page="register">
     <div th:fragment="content">
         <form id="register-form">
             <h2>Register</h2>
@@ -19,8 +19,8 @@
             <div>
                 <label for="role">Role</label>
                 <select id="role" required>
-                    <option value="USER">User</option>
-                    <option value="OWNER">Owner</option>
+                    <option value="user">User</option>
+                    <option value="owner">Owner</option>
                 </select>
             </div>
             <button type="submit">Register</button>

@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-<body>
+<body data-page="owner-dashboard">
     <div th:fragment="content">
         <h2>Owner Dashboard</h2>
         <div class="dashboard-container">
@@ -21,7 +21,10 @@
                     </div>
                     <div>
                         <label for="app-category">Category</label>
-                        <input type="text" id="app-category" required>
+                         <select id="app-category" required>
+                            <option value="Apps">App</option>
+                            <option value="Games">Game</option>
+                        </select>
                     </div>
                     <button type="submit">Upload App</button>
                 </form>

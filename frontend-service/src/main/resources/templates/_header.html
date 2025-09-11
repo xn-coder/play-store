@@ -1,18 +1,19 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-<head>
-    <link rel="stylesheet" href="/css/styles.css">
-</head>
 <body>
     <header>
-        <h1>Play Store</h1>
         <nav>
-            <a href="/">Home</a>
-            <a href="/apps">Apps</a>
-            <a href="/games">Games</a>
-            <a href="/login">Login</a>
-            <a href="/register">Register</a>
-            <a href="/owner-dashboard">Owner Dashboard</a>
+            <a th:href="@{/}" class="logo">Play Store</a>
+            <ul class="nav-links">
+                <li><a th:href="@{/}" th:class="${page == 'home' ? 'active' : ''}">Home</a></li>
+                <li><a th:href="@{/apps}" th:class="${page == 'apps' ? 'active' : ''}">Apps</a></li>
+                <li><a th:href="@{/games}" th:class="${page == 'games' ? 'active' : ''}">Games</a></li>
+            </ul>
+            <ul class="nav-auth">
+                <li><a th:href="@{/login}" th:class="${page == 'login' ? 'active' : ''}">Login</a></li>
+                <li><a th:href="@{/register}" th:class="${page == 'register' ? 'active' : ''}">Register</a></li>
+                <li><a th:href="@{/owner-dashboard}" th:class="${page == 'owner-dashboard' ? 'active' : ''}">Dashboard</a></li>
+            </ul>
         </nav>
     </header>
 </body>

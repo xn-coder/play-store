@@ -2,9 +2,21 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <body>
     <div th:fragment="content">
-        <h2>Welcome to the Play Store!</h2>
-        <p>This is a simplified clone of the Google Play Store, built with a microservices architecture.</p>
-        <p>You can browse for apps and games, and if you are a developer, you can also manage your own apps.</p>
+        <section class="hero">
+            <h2>Welcome to the Play Store!</h2>
+            <p>Your one-stop shop for apps and games.</p>
+            <div class="search-bar">
+                <input type="text" placeholder="Search for apps, games, and more...">
+                <button>Search</button>
+            </div>
+        </section>
+
+        <section class="featured-apps">
+            <h3>Featured Apps</h3>
+            <div class="app-grid">
+                <!-- Featured apps will be dynamically loaded here -->
+            </div>
+        </section>
     </div>
 </body>
 </html>

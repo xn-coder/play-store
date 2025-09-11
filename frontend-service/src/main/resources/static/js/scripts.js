@@ -1,86 +1,89 @@
+document.addEventListener('DOMContentLoaded', () => {
+    // Attach event listeners based on the current page
+    const page = document.body.dataset.page;
 
-document.addEventListener("DOMContentLoaded", () => {
-    attachFormListeners();
-    loadApps();
+    if (page === 'register') {
+        setupRegistrationForm();
+    } else if (page === 'login') {
+        setupLoginForm();
+    } else if (page === 'owner-dashboard') {
+        setupOwnerDashboard();
+    } else if (page === 'apps' || page === 'games') {
+        loadApps(page);
+    }
 });
 
-const loadApps = async () => {
-    const appGrid = document.getElementById("app-grid");
-    if (!appGrid) return;
+function setupRegistrationForm() {
+    const registerForm = document.getElementById('register-form');
+    registerForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        // Registration logic here
+        console.log('Registration form submitted');
+    });
+}
 
-    try {
-        const response = await fetch("/apps"); // Routed to app-service
-        const apps = await response.json();
+function setupLoginForm() {
+    const loginForm = document.getElementById('login-form');
+    loginForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        // Login logic here
+        console.log('Login form submitted');
+    });
+}
 
-        appGrid.innerHTML = ""; // Clear placeholder
+function setupOwnerDashboard() {
+    const uploadForm = document.getElementById('upload-app-form');
+    uploadForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        // App upload logic here
+        console.log('Upload app form submitted');
+    });
 
-        apps.forEach(app => {
-            const appElement = document.createElement("div");
-            appElement.classList.add("app-card"); // For styling
-            appElement.innerHTML = `
-                <h3>${app.name}</h3>
-                <p>${app.description}</p>
-                <p><strong>Category:</strong> ${app.category}</p>
-                <p><strong>Price:</strong> $${app.price.toFixed(2)}</p>
-            `;
-            appGrid.appendChild(appElement);
-        });
-    } catch (error) {
-        console.error("Error loading apps:", error);
-        appGrid.innerHTML = "<p>Could not load apps.</p>";
-    }
-};
+    loadOwnerApps();
+}
 
-const attachFormListeners = () => {
-    const registerForm = document.getElementById("register-form");
-    if (registerForm) {
-        registerForm.addEventListener("submit", async (event) => {
-            event.preventDefault();
-            const username = document.getElementById("username").value;
-            const email = document.getElementById("email").value;
-            const password = document.getElementById("password").value;
-            const role = document.getElementById("role").value;
+async function loadOwnerApps() {
+    const tbody = document.getElementById('owner-apps-tbody');
+    // Mock data for now
+    const apps = [
+        { name: 'My Awesome App', description: 'This is a great app.', price: 1.99, category: 'Productivity' },
+        { name: 'Another Cool App', description: 'Even cooler than the last one.', price: 0.99, category: 'Social' },
+    ];
 
-            const response = await fetch("/users/register", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify({ username, email, password, role }),
-            });
+    tbody.innerHTML = '';
+    apps.forEach(app => {
+        const row = document.createElement('tr');
+        row.innerHTML = `
+            <td>${app.name}</td>
+            <td>${app.description}</td>
+            <td>$${app.price.toFixed(2)}</td>
+            <td>${app.category}</td>
+            <td><button>Edit</button> <button>Delete</button></td>
+        `;
+        tbody.appendChild(row);
+    });
+}
 
-            if (response.ok) {
-                alert("Registration successful!");
-                window.location.href = "/login";
-            } else {
-                alert("Registration failed.");
-            }
-        });
-    }
+async function loadApps(category) {
+    const appGrid = document.querySelector('.app-grid');
+    // Mock data for now
+    const apps = [
+        { name: 'App One', description: 'Description for app one.', price: 0.99, category: 'Apps' },
+        { name: 'Game One', description: 'Description for game one.', price: 2.99, category: 'Games' },
+        { name: 'App Two', description: 'Description for app two.', price: 1.99, category: 'Apps' },
+    ];
 
-    const loginForm = document.getElementById("login-form");
-    if (loginForm) {
-        loginForm.addEventListener("submit", async (event) => {
-            event.preventDefault();
-            const username = document.getElementById("username").value;
-            const password = document.getElementById("password").value;
+    const filteredApps = apps.filter(app => app.category.toLowerCase() === category);
 
-            const response = await fetch("/users/login", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify({ username, password }),
-            });
-
-            if (response.ok) {
-                const user = await response.json();
-                localStorage.setItem("user", JSON.stringify(user));
-                alert("Login successful!");
-                window.location.href = "/home";
-            } else {
-                alert("Login failed.");
-            }
-        });
-    }
-};
+    appGrid.innerHTML = '';
+    filteredApps.forEach(app => {
+        const card = document.createElement('div');
+        card.className = 'app-card';
+        card.innerHTML = `
+            <h3>${app.name}</h3>
+            <p>${app.description}</p>
+            <span>$${app.price.toFixed(2)}</span>
+        `;
+        appGrid.appendChild(card);
+    });
+}

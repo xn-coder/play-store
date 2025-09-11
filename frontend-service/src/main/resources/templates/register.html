@@ -2,21 +2,21 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <body>
     <div th:fragment="content">
-        <h2>Register</h2>
         <form id="register-form">
-            <div class="form-group">
+            <h2>Register</h2>
+            <div>
                 <label for="username">Username</label>
                 <input type="text" id="username" required>
             </div>
-            <div class="form-group">
+            <div>
                 <label for="email">Email</label>
                 <input type="email" id="email" required>
             </div>
-            <div class="form-group">
+            <div>
                 <label for="password">Password</label>
                 <input type="password" id="password" required>
             </div>
-            <div class="form-group">
+            <div>
                 <label for="role">Role</label>
                 <select id="role" required>
                     <option value="USER">User</option>

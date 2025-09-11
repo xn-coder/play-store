@@ -1,5 +1,102 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <style>
+        body {
+            font-family: "Segoe UI", Roboto, sans-serif;
+            margin: 0;
+            padding: 0;
+            background: #f9fafc;
+            color: #333;
+        }
+
+        .container {
+            max-width: 1100px;
+            margin: 40px auto;
+            padding: 0 20px;
+        }
+
+        h2 {
+            font-size: 28px;
+            font-weight: bold;
+            text-align: center;
+            margin-bottom: 30px;
+            color: #222;
+            position: relative;
+        }
+
+        h2::after {
+            content: '';
+            width: 60px;
+            height: 3px;
+            background: #4CAF50;
+            display: block;
+            margin: 10px auto 0;
+            border-radius: 2px;
+        }
+
+        /* ---------- App Grid ---------- */
+        .app-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+            gap: 24px;
+        }
+
+        .app-card {
+            background: #fff;
+            border-radius: 16px;
+            overflow: hidden;
+            padding: 20px;
+            box-shadow: 0 6px 14px rgba(0,0,0,0.08);
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            text-align: center;
+        }
+
+        .app-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.12);
+        }
+
+        .app-card h3 {
+            font-size: 20px;
+            font-weight: 600;
+            margin: 0 0 8px;
+            color: #222;
+        }
+
+        .app-card p {
+            font-size: 14px;
+            color: #666;
+            margin-bottom: 12px;
+            min-height: 40px;
+        }
+
+        .app-card span {
+            display: block;
+            font-weight: bold;
+            color: #4CAF50;
+            margin-bottom: 14px;
+            font-size: 15px;
+        }
+
+        .installed-btn {
+            padding: 10px 18px;
+            border-radius: 8px;
+            border: none;
+            font-size: 14px;
+            cursor: not-allowed;
+            background: #ccc;
+            color: #555;
+        }
+
+        .no-apps {
+            text-align: center;
+            font-size: 16px;
+            color: #777;
+            padding: 40px 0;
+        }
+    </style>
+</head>
 <body data-page="installed">
     <div th:fragment="content">
         <div class="container">
@@ -22,7 +119,7 @@
                 appGrid.innerHTML = '';
 
                 if (installedApps.length === 0) {
-                    appGrid.innerHTML = '<p>You have no installed apps.</p>';
+                    appGrid.innerHTML = '<p class="no-apps">You have no installed apps.</p>';
                     return;
                 }
 

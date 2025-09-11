@@ -4,26 +4,33 @@
     <title>Play Store</title>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
-        /* General styles */
+        /* Reset & Base */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
         body {
             font-family: 'Poppins', sans-serif;
             margin: 0;
-            background-color: #f8f9fa;
+            background-color: #f4f6f9;
             color: #333;
+            line-height: 1.6;
         }
 
         .container {
-            max-width: 1200px;
+            max-width: 1250px;
             margin: 0 auto;
             padding: 20px;
         }
 
         /* Header */
         header {
-            background-color: #ffffff;
+            background: #ffffff;
             padding: 15px 30px;
-            border-bottom: 1px solid #e0e0e0;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+            border-bottom: 1px solid #e5e5e5;
+            box-shadow: 0 3px 6px rgba(0,0,0,0.05);
             position: sticky;
             top: 0;
             z-index: 1000;
@@ -37,59 +44,58 @@
 
         .logo {
             font-size: 28px;
-            font-weight: bold;
+            font-weight: 700;
             text-decoration: none;
             color: #007bff;
+            letter-spacing: -0.5px;
         }
 
         .nav-links, .nav-auth {
             list-style: none;
-            margin: 0;
-            padding: 0;
             display: flex;
             align-items: center;
-        }
-
-        .nav-links li, .nav-auth li {
-            margin-left: 25px;
+            gap: 25px;
         }
 
         .nav-links a, .nav-auth a {
             text-decoration: none;
-            color: #555;
+            color: #444;
             font-weight: 500;
-            transition: color 0.3s ease;
+            font-size: 15px;
+            transition: all 0.3s ease;
         }
 
         .nav-links a:hover, .nav-auth a:hover,
         .nav-links a.active, .nav-auth a.active {
             color: #007bff;
+            font-weight: 600;
         }
 
-        /* Main content */
+        /* Main Content */
         main {
-            padding: 30px 0;
+            padding: 40px 0;
         }
 
-        /* Home page */
+        /* Hero Section */
         .hero {
             text-align: center;
-            padding: 100px 20px;
-            background: linear-gradient(135deg, #007bff 0%, #0056b3 100%);
+            padding: 90px 20px;
+            background: linear-gradient(135deg, #007bff, #0056b3);
             color: #fff;
-            margin-bottom: 30px;
-            border-radius: 8px;
+            border-radius: 10px;
+            margin-bottom: 40px;
+            box-shadow: 0 6px 20px rgba(0,0,0,0.12);
         }
 
         .hero h2 {
             font-size: 48px;
-            margin-bottom: 20px;
-            font-weight: 600;
+            font-weight: 700;
+            margin-bottom: 15px;
         }
 
         .hero p {
-            font-size: 20px;
-            color: #f0f0f0;
+            font-size: 18px;
+            opacity: 0.9;
         }
 
         .search-bar {
@@ -101,86 +107,91 @@
         .search-bar input {
             width: 50%;
             padding: 15px;
-            border: none;
+            border: 1px solid #ddd;
             border-radius: 30px 0 0 30px;
             outline: none;
+            font-size: 15px;
         }
 
         .search-bar button {
             padding: 15px 30px;
             border: none;
-            background-color: #0056b3;
+            background: #0056b3;
             color: #fff;
             border-radius: 0 30px 30px 0;
             cursor: pointer;
+            transition: background 0.3s ease;
         }
 
+        .search-bar button:hover {
+            background: #003f88;
+        }
+
+        /* App Grid */
         .featured-apps {
-            background-color: #ffffff;
-            padding: 40px;
-            border-radius: 8px;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+            background: #fff;
+            padding: 35px;
+            border-radius: 10px;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.08);
         }
 
-        /* App grid */
         .app-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
             gap: 25px;
+            margin-top: 20px;
         }
 
         .app-card {
-            background-color: #fff;
-            border: 1px solid #e0e0e0;
-            border-radius: 8px;
+            background: #fff;
+            border: 1px solid #eee;
+            border-radius: 10px;
             padding: 20px;
             text-align: center;
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            transition: all 0.3s ease;
         }
 
         .app-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+            transform: translateY(-6px);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.12);
         }
 
         .app-card img {
             max-width: 100px;
-            height: auto;
-            margin-bottom: 15px;
-            border-radius: 12px;
+            border-radius: 16px;
+            margin-bottom: 12px;
         }
 
         .app-card h3 {
-            font-size: 20px;
-            margin: 15px 0 10px;
-            color: #333;
+            font-size: 18px;
+            font-weight: 600;
+            margin: 10px 0;
+            color: #222;
         }
 
         .app-card p {
-            color: #666;
             font-size: 14px;
-            line-height: 1.5;
+            color: #666;
+            line-height: 1.4;
+            margin-bottom: 10px;
         }
 
-        /* Login, Register, and Upload forms */
+        /* Forms */
         #login-form, #register-form, #upload-app-form {
             max-width: 450px;
-            margin: 50px auto;
+            margin: 60px auto;
             padding: 40px;
-            background-color: #fff;
-            border-radius: 8px;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            background: #fff;
+            border-radius: 12px;
+            box-shadow: 0 5px 18px rgba(0,0,0,0.1);
         }
 
         #login-form h2, #register-form h2, #upload-app-form h3 {
             text-align: center;
-            margin-bottom: 30px;
+            margin-bottom: 25px;
             color: #007bff;
             font-size: 24px;
-        }
-
-        #login-form div, #register-form div, #upload-app-form div {
-            margin-bottom: 20px;
+            font-weight: 600;
         }
 
         label {
@@ -190,15 +201,16 @@
             color: #444;
         }
 
-        input[type="text"], input[type="email"], input[type="password"], input[type="number"], textarea, select {
+        input, textarea, select {
             width: 100%;
             padding: 12px;
-            border: 1px solid #ccc;
+            border: 1px solid #ddd;
             border-radius: 6px;
+            margin-bottom: 18px;
             transition: border-color 0.3s ease;
         }
 
-        input[type="text"]:focus, input[type="email"]:focus, input[type="password"]:focus, input[type="number"]:focus, textarea:focus, select:focus {
+        input:focus, textarea:focus, select:focus {
             border-color: #007bff;
             outline: none;
         }
@@ -206,21 +218,21 @@
         button, button[type="submit"] {
             width: 100%;
             padding: 14px;
-            background-color: #007bff;
+            background: #007bff;
             color: #fff;
             border: none;
             border-radius: 6px;
             cursor: pointer;
-            font-size: 18px;
-            font-weight: 500;
-            transition: background-color 0.3s ease;
+            font-size: 16px;
+            font-weight: 600;
+            transition: background 0.3s ease;
         }
 
         button:hover, button[type="submit"]:hover {
-            background-color: #0056b3;
+            background: #0056b3;
         }
 
-        /* Owner dashboard */
+        /* Owner Dashboard */
         .dashboard-container {
             display: flex;
             gap: 30px;
@@ -233,10 +245,10 @@
 
         .owner-apps-table {
             flex: 2;
-            background-color: #fff;
-            padding: 30px;
-            border-radius: 8px;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+            background: #fff;
+            padding: 25px;
+            border-radius: 10px;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.08);
         }
 
         .owner-apps-table table {
@@ -245,27 +257,28 @@
         }
 
         .owner-apps-table th, .owner-apps-table td {
-            padding: 15px;
+            padding: 14px;
             border-bottom: 1px solid #f0f0f0;
             text-align: left;
         }
 
         .owner-apps-table th {
-            background-color: #f8f9fa;
+            background: #f8f9fa;
             font-weight: 600;
         }
 
         /* Footer */
         footer {
-            background-color: #ffffff;
-            padding: 20px;
-            border-top: 1px solid #e0e0e0;
+            background: #fff;
+            padding: 25px;
+            border-top: 1px solid #e5e5e5;
             text-align: center;
-            margin-top: 40px;
             color: #777;
+            font-size: 14px;
+            margin-top: 50px;
         }
 
-        /* Modal styles */
+        /* Modal */
         .modal {
             display: none;
             position: fixed;
@@ -275,31 +288,29 @@
             width: 100%;
             height: 100%;
             overflow: auto;
-            background-color: rgba(0,0,0,0.4);
+            background: rgba(0,0,0,0.5);
         }
 
         .modal-content {
-            background-color: #fefefe;
-            margin: 15% auto;
-            padding: 20px;
-            border: 1px solid #888;
+            background: #fff;
+            margin: 10% auto;
+            padding: 25px;
+            border-radius: 10px;
             width: 80%;
             max-width: 500px;
-            border-radius: 8px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.2);
         }
 
         .close-btn {
-            color: #aaa;
+            color: #888;
             float: right;
-            font-size: 28px;
+            font-size: 26px;
             font-weight: bold;
+            cursor: pointer;
         }
 
-        .close-btn:hover,
-        .close-btn:focus {
-            color: black;
-            text-decoration: none;
-            cursor: pointer;
+        .close-btn:hover {
+            color: #000;
         }
     </style>
 </head>
@@ -313,13 +324,13 @@
                 <li><a href="/games" th:classappend="${page == 'games'} ? 'active' : ''">Games</a></li>
             </ul>
             <ul class="nav-auth">
-                <!-- This will be dynamically updated based on login status -->
+                <!-- dynamically updated -->
             </ul>
         </nav>
     </header>
 
     <main th:insert="~{${page} :: content}">
-        <!-- Page content will be inserted here -->
+        <!-- Page-specific content -->
     </main>
 
     <footer>
@@ -328,7 +339,7 @@
         </div>
     </footer>
 
-    <!-- Modal Structure -->
+    <!-- Modal -->
     <div id="reviews-modal" class="modal">
         <div class="modal-content">
             <span class="close-btn">&times;</span>
@@ -339,6 +350,5 @@
             </div>
         </div>
     </div>
-
 </body>
 </html>

@@ -140,9 +140,14 @@
                 return !!localStorage.getItem('loggedInUser');
             }
 
-             function updateNav() {
+            function updateNav() {
                 const loggedInUser = JSON.parse(localStorage.getItem('loggedInUser'));
                 const navAuth = document.querySelector('.nav-auth');
+                const navLinks = document.querySelector('.nav-links');
+                const page = document.body.getAttribute('data-page');
+
+                navLinks.querySelectorAll('a').forEach(link => link.classList.remove('active'));
+                navAuth.innerHTML = ''; 
 
                 if (loggedInUser) {
                     let dashboardLink = '';
@@ -171,23 +176,15 @@
                     `;
                 }
 
-                // Set active class for main navigation
-                const page = document.body.getAttribute('data-page');
-                document.querySelectorAll('.nav-links a').forEach(link => {
-                    if (link.getAttribute('href').substring(1) === page) {
-                        link.classList.add('active');
-                    } else {
-                        link.classList.remove('active');
-                    }
-                });
-                 // Set active class for auth navigation
-                document.querySelectorAll('.nav-auth a').forEach(link => {
-                    if (link.getAttribute('href').substring(1) === page) {
-                        link.classList.add('active');
-                    } else {
-                        link.classList.remove('active');
-                    }
-                });
+                const activeLink = navLinks.querySelector(`a[href="/${page}"]`) || (page === 'home' && navLinks.querySelector('a[href="/"]'));
+                if (activeLink) {
+                    activeLink.classList.add('active');
+                }
+                
+                const activeAuthLink = navAuth.querySelector(`a[href="/${page}"]`);
+                if(activeAuthLink) {
+                    activeAuthLink.classList.add('active');
+                }
             }
         </script>
     </div>

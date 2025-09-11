@@ -89,6 +89,12 @@
                     window.location.href = '/login';
                     return;
                 }
+                
+                if (loggedInUser.role === 'owner') {
+                    alert("Owners cannot post reviews.");
+                    return;
+                }
+
 
                 const reviewText = document.getElementById('modal-review-text').value;
                 if (!reviewText) {
@@ -145,18 +151,28 @@
                 const loggedInUser = JSON.parse(localStorage.getItem('loggedInUser'));
                 const navAuth = document.querySelector('.nav-auth');
                 const navLinks = document.querySelector('.nav-links');
+                const page = document.body.getAttribute('data-page');
+
+                navLinks.querySelectorAll('a').forEach(link => link.classList.remove('active'));
+                navAuth.innerHTML = ''; 
 
                 if (loggedInUser) {
+                    let dashboardLink = '';
+                    if (loggedInUser.role === 'owner') {
+                        dashboardLink = '<li><a href="/owner-dashboard">Dashboard</a></li>';
+                    }
+
                     navAuth.innerHTML = `
-                        ${loggedInUser.role === 'owner' ? '<li><a href="/owner-dashboard">Dashboard</a></li>' : ''}
+                        ${dashboardLink}
                         <li><a href="/installed">Installed</a></li>
                         <li><a href="#" id="logout-btn">Logout</a></li>
                     `;
+
                     const logoutBtn = document.getElementById('logout-btn');
                     if (logoutBtn) {
-                        logoutBtn.addEventListener('click', () => {
+                        logoutBtn.addEventListener('click', (e) => {
+                            e.preventDefault();
                             localStorage.removeItem('loggedInUser');
-                            updateNav();
                             window.location.href = '/login';
                         });
                     }
@@ -166,11 +182,15 @@
                         <li><a href="/register">Register</a></li>
                     `;
                 }
-                 Array.from(navLinks.children).forEach(link => link.firstChild.classList.remove('active'));
-                const page = document.body.getAttribute('data-page');
-                const activeLink = document.querySelector(`.nav-links a[href="/${page}"]`);
+
+                const activeLink = navLinks.querySelector(`a[href="/${page}"]`) || (page === 'home' && navLinks.querySelector('a[href="/"]'));
                 if (activeLink) {
                     activeLink.classList.add('active');
+                }
+                
+                const activeAuthLink = navAuth.querySelector(`a[href="/${page}"]`);
+                if(activeAuthLink) {
+                    activeAuthLink.classList.add('active');
                 }
             }
         </script>

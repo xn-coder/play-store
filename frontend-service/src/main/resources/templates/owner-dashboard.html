@@ -138,11 +138,58 @@
       cursor: pointer;
       font-size: 0.85rem;
       transition: 0.3s;
+      margin-right: 5px;
     }
 
     table button:hover {
       background: #c53030;
     }
+
+    table .edit-btn {
+        background: #3182ce;
+    }
+
+    table .edit-btn:hover {
+        background: #2b6cb0;
+    }
+
+    /* Edit Modal */
+    .modal {
+        display: none;
+        position: fixed;
+        z-index: 1000;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        overflow: auto;
+        background-color: rgba(0, 0, 0, 0.5);
+    }
+
+    .modal-content {
+        background-color: #fefefe;
+        margin: 10% auto;
+        padding: 2rem;
+        border: 1px solid #888;
+        width: 80%;
+        max-width: 500px;
+        border-radius: 12px;
+    }
+
+    .close-btn {
+        color: #aaa;
+        float: right;
+        font-size: 28px;
+        font-weight: bold;
+    }
+
+    .close-btn:hover,
+    .close-btn:focus {
+        color: black;
+        text-decoration: none;
+        cursor: pointer;
+    }
+
 
     /* Responsive */
     @media (max-width: 900px) {
@@ -209,6 +256,42 @@
       </div>
     </div>
 
+    <!-- Edit App Modal -->
+    <div id="edit-app-modal" class="modal">
+        <div class="modal-content">
+            <span class="close-btn" onclick="closeEditModal()">&times;</span>
+            <h3>Edit App</h3>
+            <form id="edit-app-form" onsubmit="handleUpdate(event)">
+                <input type-="hidden" id="edit-app-id">
+                <div>
+                    <label for="edit-app-name">App Name</label>
+                    <input type="text" id="edit-app-name" required>
+                </div>
+                <div>
+                    <label for="edit-app-description">App Description</label>
+                    <textarea id="edit-app-description" required></textarea>
+                </div>
+                <div>
+                    <label for="edit-app-price">Price</label>
+                    <input type="number" id="edit-app-price" required>
+                </div>
+                <div>
+                    <label for="edit-app-category">Category</label>
+                    <select id="edit-app-category" required>
+                        <option value="Apps">App</option>
+                        <option value="Games">Game</option>
+                        <option value="Beauty">Beauty</option>
+                        <option value="Fashion">Fashion</option>
+                        <option value="Women">Women</option>
+                        <option value="Health">Health</option>
+                    </select>
+                </div>
+                <button type="submit">Update App</button>
+            </form>
+        </div>
+    </div>
+
+
     <script>
       document.addEventListener('DOMContentLoaded', () => {
         updateNav();
@@ -256,7 +339,10 @@
             <td>${app.description}</td>
             <td>$${app.price.toFixed(2)}</td>
             <td>${app.category}</td>
-            <td><button onclick="deleteApp(${app.id})">Delete</button></td>
+            <td>
+                <button class="edit-btn" onclick="openEditModal(${app.id})">Edit</button>
+                <button onclick="deleteApp(${app.id})">Delete</button>
+            </td>
           `;
           tbody.appendChild(row);
         });
@@ -267,6 +353,48 @@
         apps = apps.filter(app => app.id !== appId);
         localStorage.setItem('apps', JSON.stringify(apps));
         loadOwnerApps();
+      }
+
+      function openEditModal(appId) {
+          const modal = document.getElementById('edit-app-modal');
+          const allApps = JSON.parse(localStorage.getItem('apps')) || [];
+          const app = allApps.find(a => a.id === appId);
+
+          document.getElementById('edit-app-id').value = app.id;
+          document.getElementById('edit-app-name').value = app.name;
+          document.getElementById('edit-app-description').value = app.description;
+          document.getElementById('edit-app-price').value = app.price;
+          document.getElementById('edit-app-category').value = app.category;
+
+          modal.style.display = 'block';
+      }
+
+      function closeEditModal() {
+          const modal = document.getElementById('edit-app-modal');
+          modal.style.display = 'none';
+      }
+
+      function handleUpdate(e) {
+          e.preventDefault();
+          const appId = parseInt(document.getElementById('edit-app-id').value);
+          const appName = document.getElementById('edit-app-name').value;
+          const appDescription = document.getElementById('edit-app-description').value;
+          const appPrice = parseFloat(document.getElementById('edit-app-price').value);
+          const appCategory = document.getElementById('edit-app-category').value;
+
+          let apps = JSON.parse(localStorage.getItem('apps')) || [];
+          const appIndex = apps.findIndex(a => a.id === appId);
+
+          if (appIndex !== -1) {
+              apps[appIndex].name = appName;
+              apps[appIndex].description = appDescription;
+              apps[appIndex].price = appPrice;
+              apps[appIndex].category = appCategory;
+              localStorage.setItem('apps', JSON.stringify(apps));
+              alert('App updated successfully!');
+              loadOwnerApps();
+              closeEditModal();
+          }
       }
 
       function isLoggedIn() {
@@ -325,6 +453,3 @@
   </div>
 </body>
 </html>
-
-
-this is owner-dashboard.html

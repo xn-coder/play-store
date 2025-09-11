@@ -59,6 +59,13 @@
                     card.className = 'app-card';
                     const isInstalled = loggedInUser && loggedInUser.installedApps && loggedInUser.installedApps.includes(app.id);
                     
+                    let reviewsButtonHtml = '';
+                    if (loggedInUser && loggedInUser.role !== 'owner') {
+                        reviewsButtonHtml = `<button onclick="openReviewsModal(${app.id})" class="secondary-btn">Reviews</button>`;
+                    } else if (!loggedInUser) {
+                        reviewsButtonHtml = `<button onclick="openReviewsModal(${app.id})" class="secondary-btn">Reviews</button>`;
+                    }
+
                     card.innerHTML = `
                         <div class="app-card-image">
                            <img src="/images/app-icon.png" alt="${app.name}">
@@ -69,6 +76,7 @@
                             <span class="app-card-price">$${app.price.toFixed(2)}</span>
                             <div class="app-card-actions">
                                 <button onclick="installApp(${app.id})" ${isInstalled ? 'disabled class="installed-btn"': ''}>${isInstalled ? 'Installed' : 'Install'}</button>
+                                ${reviewsButtonHtml}
                             </div>
                         </div>
                     `;
@@ -76,10 +84,37 @@
                 });
             }
 
+            function openReviewsModal(appId) {
+                const loggedInUser = JSON.parse(localStorage.getItem('loggedInUser'));
+                if (!loggedInUser) {
+                    window.location.href = '/login';
+                    return;
+                }
+
+                const modal = document.getElementById('reviews-modal');
+                const modalReviewsContent = document.getElementById('modal-reviews-content');
+                
+                const allApps = JSON.parse(localStorage.getItem('apps')) || [];
+                const app = allApps.find(a => a.id === appId);
+
+                let reviewsHtml = '<h4>Reviews</h4>';
+                if (app.reviews && app.reviews.length > 0) {
+                    app.reviews.forEach(review => {
+                        reviewsHtml += `<div class="review"><strong>${review.user}:</strong> ${review.comment}</div>`;
+                    });
+                } else {
+                    reviewsHtml += '<p>No reviews yet.</p>';
+                }
+                modalReviewsContent.innerHTML = reviewsHtml;
+                
+                modal.style.display = 'block';
+
+                document.getElementById('modal-submit-review').onclick = () => addReview(appId);
+            }
+
             function installApp(appId) {
                 const loggedInUser = JSON.parse(localStorage.getItem('loggedInUser'));
                 if (!loggedInUser) {
-                    alert('You must be logged in to install apps.');
                     window.location.href = '/login';
                     return;
                 }

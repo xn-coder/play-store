@@ -40,6 +40,13 @@
                     const card = document.createElement('div');
                     card.className = 'app-card';
                     const isInstalled = loggedInUser && loggedInUser.installedApps && loggedInUser.installedApps.includes(app.id);
+                    
+                    let reviewsButtonHtml = '';
+                    if (loggedInUser && loggedInUser.role !== 'owner') {
+                        reviewsButtonHtml = `<button onclick="openReviewsModal(${app.id})" class="secondary-btn">Reviews</button>`;
+                    } else if (!loggedInUser) {
+                        reviewsButtonHtml = `<button onclick="openReviewsModal(${app.id})" class="secondary-btn">Reviews</button>`;
+                    }
 
                     card.innerHTML = `
                         <div class="app-card-image">
@@ -51,7 +58,7 @@
                             <span class="app-card-price">$${app.price.toFixed(2)}</span>
                             <div class="app-card-actions">
                                 <button onclick="installApp(${app.id})" ${isInstalled ? 'disabled class="installed-btn"': ''}>${isInstalled ? 'Installed' : 'Install'}</button>
-                                <button onclick="openReviewsModal(${app.id})" class="secondary-btn">Reviews</button>
+                                ${reviewsButtonHtml}
                             </div>
                         </div>
                     `;
@@ -60,17 +67,15 @@
             }
 
             function openReviewsModal(appId) {
-                const modal = document.getElementById('reviews-modal');
-                const modalReviewsContent = document.getElementById('modal-reviews-content');
-                const reviewForm = document.getElementById('modal-review-form');
                 const loggedInUser = JSON.parse(localStorage.getItem('loggedInUser'));
-
-                if (loggedInUser && loggedInUser.role === 'owner') {
-                    reviewForm.style.display = 'none';
-                } else {
-                    reviewForm.style.display = 'block';
+                if (!loggedInUser) {
+                    window.location.href = '/login';
+                    return;
                 }
 
+                const modal = document.getElementById('reviews-modal');
+                const modalReviewsContent = document.getElementById('modal-reviews-content');
+                
                 const allApps = JSON.parse(localStorage.getItem('apps')) || [];
                 const app = allApps.find(a => a.id === appId);
 
@@ -92,16 +97,9 @@
             function addReview(appId) {
                 const loggedInUser = JSON.parse(localStorage.getItem('loggedInUser'));
                 if (!loggedInUser) {
-                    alert('You must be logged in to add a review.');
                     window.location.href = '/login';
                     return;
                 }
-                
-                if (loggedInUser.role === 'owner') {
-                    alert("Owners cannot post reviews.");
-                    return;
-                }
-
 
                 const reviewText = document.getElementById('modal-review-text').value;
                 if (!reviewText) {
@@ -128,7 +126,6 @@
             function installApp(appId) {
                 const loggedInUser = JSON.parse(localStorage.getItem('loggedInUser'));
                 if (!loggedInUser) {
-                    alert('You must be logged in to install apps.');
                     window.location.href = '/login';
                     return;
                 }

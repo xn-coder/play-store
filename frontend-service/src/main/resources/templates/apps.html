@@ -13,9 +13,11 @@
                 updateNav();
                 loadApps('Apps');
             });
+
             function loadApps(pageCategory) {
                 const appGrid = document.querySelector('.app-grid');
                 const allApps = JSON.parse(localStorage.getItem('apps')) || [];
+                const loggedInUser = JSON.parse(localStorage.getItem('loggedInUser'));
                 const filteredApps = allApps.filter(app => app.category === pageCategory);
 
                 appGrid.innerHTML = '';
@@ -28,13 +30,84 @@
                 filteredApps.forEach(app => {
                     const card = document.createElement('div');
                     card.className = 'app-card';
+                    const isInstalled = loggedInUser && loggedInUser.installedApps && loggedInUser.installedApps.includes(app.id);
+                    
+                    let reviewsHtml = '<div class="reviews-section"><h4>Reviews</h4>';
+                    if (app.reviews && app.reviews.length > 0) {
+                        app.reviews.forEach(review => {
+                            reviewsHtml += `<div class="review"><strong>${review.user}:</strong> ${review.comment}</div>`;
+                        });
+                    } else {
+                        reviewsHtml += '<p>No reviews yet.</p>';
+                    }
+                    reviewsHtml += '</div>';
+
                     card.innerHTML = `
                         <h3>${app.name}</h3>
                         <p>${app.description}</p>
                         <span>$${app.price.toFixed(2)}</span>
+                        <button onclick="installApp(${app.id})" ${isInstalled ? 'disabled class="installed-btn"': ''}>${isInstalled ? 'Installed' : 'Install'}</button>
+                        ${reviewsHtml}
+                        <div class="add-review-form">
+                            <textarea id="review-text-${app.id}" placeholder="Add a review..."></textarea>
+                            <button onclick="addReview(${app.id})">Submit Review</button>
+                        </div>
                     `;
                     appGrid.appendChild(card);
                 });
+            }
+
+            function addReview(appId) {
+                const loggedInUser = JSON.parse(localStorage.getItem('loggedInUser'));
+                if (!loggedInUser) {
+                    alert('You must be logged in to add a review.');
+                    window.location.href = '/login';
+                    return;
+                }
+
+                const reviewText = document.getElementById(`review-text-${appId}`).value;
+                if (!reviewText) {
+                    alert('Review cannot be empty.');
+                    return;
+                }
+
+                const allApps = JSON.parse(localStorage.getItem('apps')) || [];
+                const appIndex = allApps.findIndex(app => app.id === appId);
+
+                if (appIndex !== -1) {
+                    if (!allApps[appIndex].reviews) {
+                        allApps[appIndex].reviews = [];
+                    }
+                    allApps[appIndex].reviews.push({ user: loggedInUser.username, comment: reviewText });
+                    localStorage.setItem('apps', JSON.stringify(allApps));
+                    loadApps('Apps'); // Reload apps to show the new review
+                }
+            }
+
+            function installApp(appId) {
+                const loggedInUser = JSON.parse(localStorage.getItem('loggedInUser'));
+                if (!loggedInUser) {
+                    alert('You must be logged in to install apps.');
+                    window.location.href = '/login';
+                    return;
+                }
+
+                if (!loggedInUser.installedApps) {
+                    loggedInUser.installedApps = [];
+                }
+
+                loggedInUser.installedApps.push(appId);
+                localStorage.setItem('loggedInUser', JSON.stringify(loggedInUser));
+
+                // Update users array as well
+                const users = JSON.parse(localStorage.getItem('users')) || [];
+                const userIndex = users.findIndex(u => u.username === loggedInUser.username);
+                if (userIndex !== -1) {
+                    users[userIndex] = loggedInUser;
+                    localStorage.setItem('users', JSON.stringify(users));
+                }
+
+                loadApps('Apps');
             }
 
             function isLoggedIn() {
@@ -44,13 +117,15 @@
             function updateNav() {
                 const loggedInUser = JSON.parse(localStorage.getItem('loggedInUser'));
                 const navAuth = document.querySelector('.nav-auth');
+                const navLinks = document.querySelector('.nav-links');
 
                 if (loggedInUser) {
                     navAuth.innerHTML = `
                         ${loggedInUser.role === 'owner' ? '<li><a href="/owner-dashboard">Dashboard</a></li>' : ''}
+                        <li><a href="/installed">Installed</a></li>
                         <li><a href="#" id="logout-btn">Logout</a></li>
                     `;
-                     const logoutBtn = document.getElementById('logout-btn');
+                    const logoutBtn = document.getElementById('logout-btn');
                     if (logoutBtn) {
                         logoutBtn.addEventListener('click', () => {
                             localStorage.removeItem('loggedInUser');
@@ -63,6 +138,12 @@
                         <li><a href="/login">Login</a></li>
                         <li><a href="/register">Register</a></li>
                     `;
+                }
+                 Array.from(navLinks.children).forEach(link => link.firstChild.classList.remove('active'));
+                const page = document.body.getAttribute('data-page');
+                const activeLink = document.querySelector(`.nav-links a[href="/${page}"]`);
+                if (activeLink) {
+                    activeLink.classList.add('active');
                 }
             }
         </script>

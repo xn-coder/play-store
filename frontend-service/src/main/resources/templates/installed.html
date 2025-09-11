@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<body data-page="installed">
+    <div th:fragment="content">
+        <div class="container">
+            <h2>Installed Apps</h2>
+            <div class="app-grid" id="installed-apps-grid">
+            </div>
+        </div>
+        <script>
+            document.addEventListener('DOMContentLoaded', () => {
+                updateNav();
+                loadInstalledApps();
+            });
+
+            function loadInstalledApps() {
+                const appGrid = document.getElementById('installed-apps-grid');
+                const loggedInUser = JSON.parse(localStorage.getItem('loggedInUser'));
+                const allApps = JSON.parse(localStorage.getItem('apps')) || [];
+                const installedApps = loggedInUser ? allApps.filter(app => loggedInUser.installedApps && loggedInUser.installedApps.includes(app.id)) : [];
+
+                appGrid.innerHTML = '';
+
+                if (installedApps.length === 0) {
+                    appGrid.innerHTML = '<p>You have no installed apps.</p>';
+                    return;
+                }
+
+                installedApps.forEach(app => {
+                    const card = document.createElement('div');
+                    card.className = 'app-card';
+                    card.innerHTML = `
+                        <h3>${app.name}</h3>
+                        <p>${app.description}</p>
+                        <span>$${app.price.toFixed(2)}</span>
+                        <button class="installed-btn" disabled>Installed</button>
+                    `;
+                    appGrid.appendChild(card);
+                });
+            }
+
+            function isLoggedIn() {
+                return !!localStorage.getItem('loggedInUser');
+            }
+
+            function updateNav() {
+                const loggedInUser = JSON.parse(localStorage.getItem('loggedInUser'));
+                const navAuth = document.querySelector('.nav-auth');
+
+                if (loggedInUser) {
+                    navAuth.innerHTML = `
+                        ${loggedInUser.role === 'owner' ? '<li><a href="/owner-dashboard">Dashboard</a></li>' : ''}
+                        <li><a href="/installed" class="active">Installed</a></li>
+                        <li><a href="#" id="logout-btn">Logout</a></li>
+                    `;
+                    const logoutBtn = document.getElementById('logout-btn');
+                    if (logoutBtn) {
+                        logoutBtn.addEventListener('click', () => {
+                            localStorage.removeItem('loggedInUser');
+                            updateNav();
+                            window.location.href = '/login';
+                        });
+                    }
+                } else {
+                    navAuth.innerHTML = `
+                        <li><a href="/login">Login</a></li>
+                        <li><a href="/register">Register</a></li>
+                    `;
+                }
+            }
+        </script>
+    </div>
+</body>
+</html>

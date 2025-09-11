@@ -48,4 +48,11 @@ public class FrontendController {
         model.addAttribute("title", "Owner Dashboard");
         return "layout";
     }
+
+    @GetMapping("/installed")
+    public String installed(Model model) {
+        model.addAttribute("page", "installed");
+        model.addAttribute("title", "Installed");
+        return "layout";
+    }
 }

@@ -25,6 +25,10 @@
                              <select id="app-category" required>
                                 <option value="Apps">App</option>
                                 <option value="Games">Game</option>
+                                <option value="Beauty">Beauty</option>
+                                <option value="Fashion">Fashion</option>
+                                <option value="Women">Women</option>
+                                <option value="Health">Health</option>
                             </select>
                         </div>
                         <button type="submit">Upload App</button>
@@ -118,15 +122,22 @@
                 const navAuth = document.querySelector('.nav-auth');
 
                 if (loggedInUser) {
+                    let dashboardLink = '';
+                    if (loggedInUser.role === 'owner') {
+                        dashboardLink = '<li><a href="/owner-dashboard">Dashboard</a></li>';
+                    }
+
                     navAuth.innerHTML = `
-                        ${loggedInUser.role === 'owner' ? '<li><a href="/owner-dashboard" class="active">Dashboard</a></li>' : ''}
+                        ${dashboardLink}
+                        <li><a href="/installed">Installed</a></li>
                         <li><a href="#" id="logout-btn">Logout</a></li>
                     `;
-                     const logoutBtn = document.getElementById('logout-btn');
+
+                    const logoutBtn = document.getElementById('logout-btn');
                     if (logoutBtn) {
-                        logoutBtn.addEventListener('click', () => {
+                        logoutBtn.addEventListener('click', (e) => {
+                            e.preventDefault();
                             localStorage.removeItem('loggedInUser');
-                            updateNav();
                             window.location.href = '/login';
                         });
                     }
@@ -136,6 +147,24 @@
                         <li><a href="/register">Register</a></li>
                     `;
                 }
+
+                // Set active class for main navigation
+                const page = document.body.getAttribute('data-page');
+                document.querySelectorAll('.nav-links a').forEach(link => {
+                    if (link.getAttribute('href').substring(1) === page) {
+                        link.classList.add('active');
+                    } else {
+                        link.classList.remove('active');
+                    }
+                });
+                 // Set active class for auth navigation
+                document.querySelectorAll('.nav-auth a').forEach(link => {
+                    if (link.getAttribute('href').substring(1) === page) {
+                        link.classList.add('active');
+                    } else {
+                        link.classList.remove('active');
+                    }
+                });
             }
         </script>
     </div>

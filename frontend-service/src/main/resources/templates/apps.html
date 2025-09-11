@@ -6,64 +6,7 @@
         <div class="app-grid" id="app-grid">
             <!-- Apps will be dynamically loaded here -->
         </div>
-        <script>
-            document.addEventListener('DOMContentLoaded', () => {
-                updateNav();
-                loadApps('app');
-            });
-
-            function loadApps(pageCategory) {
-                const appGrid = document.querySelector('.app-grid');
-                const allApps = JSON.parse(localStorage.getItem('apps')) || [];
-                const filteredApps = allApps.filter(app => app.category.toLowerCase() === pageCategory);
-
-                appGrid.innerHTML = '';
-                if (filteredApps.length === 0) {
-                    appGrid.innerHTML = '<p>No apps to display in this category.</p>';
-                    return;
-                }
-                
-                filteredApps.forEach(app => {
-                    const card = document.createElement('div');
-                    card.className = 'app-card';
-                    card.innerHTML = `
-                        <h3>${app.name}</h3>
-                        <p>${app.description}</p>
-                        <span>$${app.price.toFixed(2)}</span>
-                    `;
-                    appGrid.appendChild(card);
-                });
-            }
-
-            function isLoggedIn() {
-                return !!localStorage.getItem('loggedInUser');
-            }
-
-            function updateNav() {
-                const loggedInUser = JSON.parse(localStorage.getItem('loggedInUser'));
-                const navAuth = document.querySelector('.nav-auth');
-
-                if (loggedInUser) {
-                    navAuth.innerHTML = `
-                        ${loggedInUser.role === 'owner' ? '<li><a href="/owner-dashboard">Dashboard</a></li>' : ''}
-                        <li><a href="#" id="logout-btn">Logout</a></li>
-                    `;
-                     const logoutBtn = document.getElementById('logout-btn');
-                    if (logoutBtn) {
-                        logoutBtn.addEventListener('click', () => {
-                            localStorage.removeItem('loggedInUser');
-                            updateNav();
-                            window.location.href = '/login';
-                        });
-                    }
-                } else {
-                    navAuth.innerHTML = `
-                        <li><a href="/login">Login</a></li>
-                        <li><a href="/register">Register</a></li>
-                    `;
-                }
-            }
-        </script>
+        <script th:src="@{/js/apps.js}"></script>
     </div>
 </body>
 </html>

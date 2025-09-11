@@ -1,9 +1,58 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <style>
+        /* ===== Footer Styling ===== */
+        footer {
+            background: #111827;
+            color: #9ca3af;
+            padding: 2rem 1rem;
+            text-align: center;
+            margin-top: 3rem;
+        }
+
+        .footer-content {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .footer-logo {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: #fff;
+            text-decoration: none;
+        }
+
+        .footer-logo img {
+            height: 30px;
+            width: 30px;
+            border-radius: 6px;
+            object-fit: cover;
+        }
+
+        footer p {
+            margin: 0;
+            font-size: 0.95rem;
+        }
+
+        footer p strong {
+            color: #fff;
+        }
+    </style>
+</head>
 <body>
     <footer th:fragment="footer">
-        <div class="container">
-            <p>&copy; 2025 Play Store</p>
+        <div class="container footer-content">
+            <a href="/" class="footer-logo">
+                <img src="/images/logo.png" alt="Play Store Logo">
+                Play Store
+            </a>
+            <p>&copy; <strong>2025 Play Store</strong>. All rights reserved.</p>
         </div>
     </footer>
 </body>

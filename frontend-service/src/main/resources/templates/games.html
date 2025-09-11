@@ -11,6 +11,15 @@
             document.addEventListener('DOMContentLoaded', () => {
                 updateNav();
                 loadApps('Games');
+
+                const modal = document.getElementById('reviews-modal');
+                const closeBtn = document.querySelector('.close-btn');
+                closeBtn.onclick = () => modal.style.display = 'none';
+                window.onclick = (event) => {
+                    if (event.target == modal) {
+                        modal.style.display = 'none';
+                    }
+                };
             });
 
             function loadApps(pageCategory) {
@@ -30,30 +39,39 @@
                     const card = document.createElement('div');
                     card.className = 'app-card';
                     const isInstalled = loggedInUser && loggedInUser.installedApps && loggedInUser.installedApps.includes(app.id);
-                    
-                    let reviewsHtml = '<div class="reviews-section"><h4>Reviews</h4>';
-                    if (app.reviews && app.reviews.length > 0) {
-                        app.reviews.forEach(review => {
-                            reviewsHtml += `<div class="review"><strong>${review.user}:</strong> ${review.comment}</div>`;
-                        });
-                    } else {
-                        reviewsHtml += '<p>No reviews yet.</p>';
-                    }
-                    reviewsHtml += '</div>';
 
                     card.innerHTML = `
                         <h3>${app.name}</h3>
                         <p>${app.description}</p>
                         <span>$${app.price.toFixed(2)}</span>
                         <button onclick="installApp(${app.id})" ${isInstalled ? 'disabled class="installed-btn"': ''}>${isInstalled ? 'Installed' : 'Install'}</button>
-                        ${reviewsHtml}
-                        <div class="add-review-form">
-                            <textarea id="review-text-${app.id}" placeholder="Add a review..."></textarea>
-                            <button onclick="addReview(${app.id})">Submit Review</button>
-                        </div>
+                        <button onclick="openReviewsModal(${app.id})">Show Reviews</button>
                     `;
                     appGrid.appendChild(card);
                 });
+            }
+
+            function openReviewsModal(appId) {
+                const modal = document.getElementById('reviews-modal');
+                const modalReviewsContent = document.getElementById('modal-reviews-content');
+                const modalSubmitReviewBtn = document.getElementById('modal-submit-review');
+                
+                const allApps = JSON.parse(localStorage.getItem('apps')) || [];
+                const app = allApps.find(a => a.id === appId);
+
+                let reviewsHtml = '<h4>Reviews</h4>';
+                if (app.reviews && app.reviews.length > 0) {
+                    app.reviews.forEach(review => {
+                        reviewsHtml += `<div class="review"><strong>${review.user}:</strong> ${review.comment}</div>`;
+                    });
+                } else {
+                    reviewsHtml += '<p>No reviews yet.</p>';
+                }
+                modalReviewsContent.innerHTML = reviewsHtml;
+                
+                modal.style.display = 'block';
+
+                modalSubmitReviewBtn.onclick = () => addReview(appId);
             }
 
             function addReview(appId) {
@@ -64,7 +82,7 @@
                     return;
                 }
 
-                const reviewText = document.getElementById(`review-text-${appId}`).value;
+                const reviewText = document.getElementById('modal-review-text').value;
                 if (!reviewText) {
                     alert('Review cannot be empty.');
                     return;
@@ -79,7 +97,10 @@
                     }
                     allApps[appIndex].reviews.push({ user: loggedInUser.username, comment: reviewText });
                     localStorage.setItem('apps', JSON.stringify(allApps));
-                    loadApps('Games'); // Reload games to show the new review
+                    
+                    document.getElementById('modal-review-text').value = '';
+                    const modal = document.getElementById('reviews-modal');
+                    modal.style.display = 'none';
                 }
             }
 

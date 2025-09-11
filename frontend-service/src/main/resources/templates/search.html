@@ -1,5 +1,110 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Search Results | Play Store</title>
+    <style>
+        body {
+            font-family: "Poppins", sans-serif;
+            background-color: #f8f9fa;
+            margin: 0;
+            padding: 0;
+            color: #333;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 3rem auto;
+            padding: 0 1rem;
+        }
+
+        h2 {
+            font-size: 2rem;
+            margin-bottom: 2rem;
+            text-align: center;
+            color: #007bff;
+        }
+
+        .app-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+            gap: 20px;
+        }
+
+        .app-card {
+            background-color: #fff;
+            padding: 1.5rem;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+            text-align: center;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .app-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.12);
+        }
+
+        .app-card h3 {
+            font-size: 1.2rem;
+            margin-bottom: 0.5rem;
+            color: #333;
+        }
+
+        .app-card p {
+            font-size: 0.95rem;
+            color: #666;
+            margin-bottom: 1rem;
+            min-height: 50px;
+        }
+
+        .app-card span {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            color: #007bff;
+        }
+
+        .app-card button {
+            padding: 0.6rem 1.2rem;
+            font-size: 0.95rem;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: #fff;
+            transition: 0.3s;
+        }
+
+        .app-card button:hover:not([disabled]) {
+            background: linear-gradient(135deg, #5a67d8, #6b46c1);
+            transform: translateY(-2px);
+        }
+
+        .app-card button[disabled] {
+            background-color: #aaa;
+            cursor: default;
+        }
+
+        p.no-results {
+            text-align: center;
+            font-size: 1.1rem;
+            color: #555;
+            grid-column: 1 / -1;
+        }
+
+        @media (max-width: 600px) {
+            .app-card {
+                padding: 1rem;
+            }
+
+            .app-card p {
+                font-size: 0.9rem;
+            }
+        }
+    </style>
+</head>
 <body data-page="search">
     <div th:fragment="content">
         <div class="container">
@@ -13,8 +118,8 @@
             document.addEventListener('DOMContentLoaded', () => {
                 updateNav();
                 const urlParams = new URLSearchParams(window.location.search);
-                const query = urlParams.get('q');
-                document.getElementById('search-results-heading').innerText = `Search Results for "${query}"`;
+                const query = urlParams.get('q') || '';
+                document.getElementById('search-results-heading').innerText = Search Results for "${query}";
                 loadSearchResults(query);
             });
 
@@ -31,7 +136,7 @@
                 appGrid.innerHTML = '';
 
                 if (filteredApps.length === 0) {
-                    appGrid.innerHTML = '<p>No results found.</p>';
+                    appGrid.innerHTML = '<p class="no-results">No results found.</p>';
                     return;
                 }
 
@@ -43,7 +148,7 @@
                         <h3>${app.name}</h3>
                         <p>${app.description}</p>
                         <span>$${app.price.toFixed(2)}</span>
-                        <button onclick="installApp(${app.id})" ${isInstalled ? 'disabled class="installed-btn"': ''}>${isInstalled ? 'Installed' : 'Install'}</button>
+                        <button onclick="installApp(${app.id})" ${isInstalled ? 'disabled' : ''}>${isInstalled ? 'Installed' : 'Install'}</button>
                     `;
                     appGrid.appendChild(card);
                 });
@@ -57,9 +162,7 @@
                     return;
                 }
 
-                if (!loggedInUser.installedApps) {
-                    loggedInUser.installedApps = [];
-                }
+                if (!loggedInUser.installedApps) loggedInUser.installedApps = [];
 
                 loggedInUser.installedApps.push(appId);
                 localStorage.setItem('loggedInUser', JSON.stringify(loggedInUser));
@@ -74,10 +177,6 @@
                 loadSearchResults(new URLSearchParams(window.location.search).get('q'));
             }
 
-            function isLoggedIn() {
-                return !!localStorage.getItem('loggedInUser');
-            }
-
             function updateNav() {
                 const loggedInUser = JSON.parse(localStorage.getItem('loggedInUser'));
                 const navAuth = document.querySelector('.nav-auth');
@@ -88,7 +187,7 @@
                         <li><a href="/installed">Installed</a></li>
                         <li><a href="#" id="logout-btn">Logout</a></li>
                     `;
-                     const logoutBtn = document.getElementById('logout-btn');
+                    const logoutBtn = document.getElementById('logout-btn');
                     if (logoutBtn) {
                         logoutBtn.addEventListener('click', () => {
                             localStorage.removeItem('loggedInUser');

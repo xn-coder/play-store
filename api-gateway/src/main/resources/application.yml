@@ -27,8 +27,8 @@ spring:
           uri: lb://app-service
           predicates:
             - Path=/apps/**
-        - id: static-content
-          uri: http://localhost:8081
+        - id: frontend-service
+          uri: lb://frontend-service
           predicates:
             - Path=/**
 

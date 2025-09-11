@@ -119,7 +119,7 @@
                 updateNav();
                 const urlParams = new URLSearchParams(window.location.search);
                 const query = urlParams.get('q') || '';
-                document.getElementById('search-results-heading').innerText = Search Results for "${query}";
+                document.getElementById('search-results-heading').innerText = `Search Results for "${query}"`;
                 loadSearchResults(query);
             });
 

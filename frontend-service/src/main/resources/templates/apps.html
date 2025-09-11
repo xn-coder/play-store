@@ -8,12 +8,12 @@
         </div>
         <script>
             document.addEventListener('DOMContentLoaded', () => {
-                loadApps('app');
+                loadApps('Apps');
             });
             function loadApps(pageCategory) {
                 const appGrid = document.querySelector('.app-grid');
                 const allApps = JSON.parse(localStorage.getItem('apps')) || [];
-                const filteredApps = allApps.filter(app => app.category.toLowerCase() === pageCategory);
+                const filteredApps = allApps.filter(app => app.category === pageCategory);
 
                 appGrid.innerHTML = '';
 

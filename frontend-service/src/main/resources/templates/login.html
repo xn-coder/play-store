@@ -14,61 +14,61 @@
             </div>
             <button type="submit">Login</button>
         </form>
-    </div>
-    <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            updateNav();
-        });
+        <script>
+            document.addEventListener('DOMContentLoaded', () => {
+                updateNav();
+            });
 
-        function handleLogin(e) {
-            e.preventDefault();
-            const username = document.getElementById('username').value;
-            const password = document.getElementById('password').value;
+            function handleLogin(e) {
+                e.preventDefault();
+                const username = document.getElementById('username').value;
+                const password = document.getElementById('password').value;
 
-            const users = JSON.parse(localStorage.getItem('users')) || [];
-            const user = users.find(u => u.username === username && u.password === password);
+                const users = JSON.parse(localStorage.getItem('users')) || [];
+                const user = users.find(u => u.username === username && u.password === password);
 
-            if (user) {
-                localStorage.setItem('loggedInUser', JSON.stringify(user));
-                alert('Login successful!');
-                if (user.role === 'owner') {
-                    window.location.href = '/owner-dashboard';
+                if (user) {
+                    localStorage.setItem('loggedInUser', JSON.stringify(user));
+                    alert('Login successful!');
+                    if (user.role === 'owner') {
+                        window.location.href = '/owner-dashboard';
+                    } else {
+                        window.location.href = '/';
+                    }
                 } else {
-                    window.location.href = '/';
+                    alert('Invalid credentials!');
                 }
-            } else {
-                alert('Invalid credentials!');
             }
-        }
 
-        function isLoggedIn() {
-            return !!localStorage.getItem('loggedInUser');
-        }
+            function isLoggedIn() {
+                return !!localStorage.getItem('loggedInUser');
+            }
 
-        function updateNav() {
-            const loggedInUser = JSON.parse(localStorage.getItem('loggedInUser'));
-            const navAuth = document.querySelector('.nav-auth');
+            function updateNav() {
+                const loggedInUser = JSON.parse(localStorage.getItem('loggedInUser'));
+                const navAuth = document.querySelector('.nav-auth');
 
-            if (loggedInUser) {
-                navAuth.innerHTML = `
-                    ${loggedInUser.role === 'owner' ? '<li><a href="/owner-dashboard">Dashboard</a></li>' : ''}
-                    <li><a href="#" id="logout-btn">Logout</a></li>
-                `;
-                 const logoutBtn = document.getElementById('logout-btn');
-                if (logoutBtn) {
-                    logoutBtn.addEventListener('click', () => {
-                        localStorage.removeItem('loggedInUser');
-                        updateNav();
-                        window.location.href = '/login';
-                    });
+                if (loggedInUser) {
+                    navAuth.innerHTML = `
+                        ${loggedInUser.role === 'owner' ? '<li><a href="/owner-dashboard">Dashboard</a></li>' : ''}
+                        <li><a href="#" id="logout-btn">Logout</a></li>
+                    `;
+                     const logoutBtn = document.getElementById('logout-btn');
+                    if (logoutBtn) {
+                        logoutBtn.addEventListener('click', () => {
+                            localStorage.removeItem('loggedInUser');
+                            updateNav();
+                            window.location.href = '/login';
+                        });
+                    }
+                } else {
+                    navAuth.innerHTML = `
+                        <li><a href="/login" class="active">Login</a></li>
+                        <li><a href="/register">Register</a></li>
+                    `;
                 }
-            } else {
-                navAuth.innerHTML = `
-                    <li><a href="/login" class="active">Login</a></li>
-                    <li><a href="/register">Register</a></li>
-                `;
             }
-        }
-    </script>
+        </script>
+    </div>
 </body>
 </html>

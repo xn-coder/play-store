@@ -6,7 +6,34 @@
         <div class="app-grid" id="app-grid">
             <!-- Apps will be dynamically loaded here -->
         </div>
-        <script th:src="@{/js/apps.js}"></script>
+        <script>
+            document.addEventListener('DOMContentLoaded', () => {
+                loadApps('app');
+            });
+            function loadApps(pageCategory) {
+                const appGrid = document.querySelector('.app-grid');
+                const allApps = JSON.parse(localStorage.getItem('apps')) || [];
+                const filteredApps = allApps.filter(app => app.category.toLowerCase() === pageCategory);
+
+                appGrid.innerHTML = '';
+
+                if (filteredApps.length === 0) {
+                    appGrid.innerHTML = '<p>No apps to display in this category.</p>';
+                    return;
+                }
+
+                filteredApps.forEach(app => {
+                    const card = document.createElement('div');
+                    card.className = 'app-card';
+                    card.innerHTML = `
+                        <h3>${app.name}</h3>
+                        <p>${app.description}</p>
+                        <span>$${app.price.toFixed(2)}</span>
+                    `;
+                    appGrid.appendChild(card);
+                });
+            }
+        </script>
     </div>
 </body>
 </html>

@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<body data-page="search">
+    <div th:fragment="content">
+        <div class="container">
+            <h2 id="search-results-heading"></h2>
+            <div class="app-grid" id="search-results-grid">
+                <!-- Search results will be dynamically loaded here -->
+            </div>
+        </div>
+
+        <script>
+            document.addEventListener('DOMContentLoaded', () => {
+                updateNav();
+                const urlParams = new URLSearchParams(window.location.search);
+                const query = urlParams.get('q');
+                document.getElementById('search-results-heading').innerText = `Search Results for "${query}"`;
+                loadSearchResults(query);
+            });
+
+            function loadSearchResults(query) {
+                const appGrid = document.getElementById('search-results-grid');
+                const allApps = JSON.parse(localStorage.getItem('apps')) || [];
+                const loggedInUser = JSON.parse(localStorage.getItem('loggedInUser'));
+
+                const filteredApps = allApps.filter(app => 
+                    app.name.toLowerCase().includes(query.toLowerCase()) || 
+                    app.description.toLowerCase().includes(query.toLowerCase())
+                );
+
+                appGrid.innerHTML = '';
+
+                if (filteredApps.length === 0) {
+                    appGrid.innerHTML = '<p>No results found.</p>';
+                    return;
+                }
+
+                filteredApps.forEach(app => {
+                    const card = document.createElement('div');
+                    card.className = 'app-card';
+                    const isInstalled = loggedInUser && loggedInUser.installedApps && loggedInUser.installedApps.includes(app.id);
+                    card.innerHTML = `
+                        <h3>${app.name}</h3>
+                        <p>${app.description}</p>
+                        <span>$${app.price.toFixed(2)}</span>
+                        <button onclick="installApp(${app.id})" ${isInstalled ? 'disabled class="installed-btn"': ''}>${isInstalled ? 'Installed' : 'Install'}</button>
+                    `;
+                    appGrid.appendChild(card);
+                });
+            }
+
+            function installApp(appId) {
+                const loggedInUser = JSON.parse(localStorage.getItem('loggedInUser'));
+                if (!loggedInUser) {
+                    alert('You must be logged in to install apps.');
+                    window.location.href = '/login';
+                    return;
+                }
+
+                if (!loggedInUser.installedApps) {
+                    loggedInUser.installedApps = [];
+                }
+
+                loggedInUser.installedApps.push(appId);
+                localStorage.setItem('loggedInUser', JSON.stringify(loggedInUser));
+
+                const users = JSON.parse(localStorage.getItem('users')) || [];
+                const userIndex = users.findIndex(u => u.username === loggedInUser.username);
+                if (userIndex !== -1) {
+                    users[userIndex] = loggedInUser;
+                    localStorage.setItem('users', JSON.stringify(users));
+                }
+
+                loadSearchResults(new URLSearchParams(window.location.search).get('q'));
+            }
+
+            function isLoggedIn() {
+                return !!localStorage.getItem('loggedInUser');
+            }
+
+            function updateNav() {
+                const loggedInUser = JSON.parse(localStorage.getItem('loggedInUser'));
+                const navAuth = document.querySelector('.nav-auth');
+
+                if (loggedInUser) {
+                    navAuth.innerHTML = `
+                        ${loggedInUser.role === 'owner' ? '<li><a href="/owner-dashboard">Dashboard</a></li>' : ''}
+                        <li><a href="/installed">Installed</a></li>
+                        <li><a href="#" id="logout-btn">Logout</a></li>
+                    `;
+                     const logoutBtn = document.getElementById('logout-btn');
+                    if (logoutBtn) {
+                        logoutBtn.addEventListener('click', () => {
+                            localStorage.removeItem('loggedInUser');
+                            updateNav();
+                            window.location.href = '/login';
+                        });
+                    }
+                } else {
+                    navAuth.innerHTML = `
+                        <li><a href="/login">Login</a></li>
+                        <li><a href="/register">Register</a></li>
+                    `;
+                }
+            }
+        </script>
+    </div>
+</body>
+</html>

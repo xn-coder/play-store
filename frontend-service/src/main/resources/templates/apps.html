@@ -3,7 +3,7 @@
 <body data-page="apps">
     <div th:fragment="content">
         <div class="container">
-            <h2>All Apps</h2>
+            <h2 class="section-title">All Apps</h2>
             <div class="app-grid" id="app-grid">
                 <!-- Apps will be dynamically loaded here -->
             </div>
@@ -42,11 +42,18 @@
                     const isInstalled = loggedInUser && loggedInUser.installedApps && loggedInUser.installedApps.includes(app.id);
 
                     card.innerHTML = `
-                        <h3>${app.name}</h3>
-                        <p>${app.description}</p>
-                        <span>$${app.price.toFixed(2)}</span>
-                        <button onclick="installApp(${app.id})" ${isInstalled ? 'disabled class="installed-btn"': ''}>${isInstalled ? 'Installed' : 'Install'}</button>
-                        <button onclick="openReviewsModal(${app.id})">Show Reviews</button>
+                        <div class="app-card-image">
+                           <img src="/images/app-icon.png" alt="${app.name}">
+                        </div>
+                        <div class="app-card-content">
+                            <h3 class="app-card-title">${app.name}</h3>
+                            <p class="app-card-description">${app.description}</p>
+                            <span class="app-card-price">$${app.price.toFixed(2)}</span>
+                            <div class="app-card-actions">
+                                <button onclick="installApp(${app.id})" ${isInstalled ? 'disabled class="installed-btn"': ''}>${isInstalled ? 'Installed' : 'Install'}</button>
+                                <button onclick="openReviewsModal(${app.id})" class="secondary-btn">Reviews</button>
+                            </div>
+                        </div>
                     `;
                     appGrid.appendChild(card);
                 });
@@ -102,7 +109,6 @@
                     document.getElementById('modal-review-text').value = '';
                     const modal = document.getElementById('reviews-modal');
                     modal.style.display = 'none';
-                    // No need to call loadApps here, as the main page content doesn't change
                 }
             }
 
@@ -121,7 +127,6 @@
                 loggedInUser.installedApps.push(appId);
                 localStorage.setItem('loggedInUser', JSON.stringify(loggedInUser));
 
-                // Update users array as well
                 const users = JSON.parse(localStorage.getItem('users')) || [];
                 const userIndex = users.findIndex(u => u.username === loggedInUser.username);
                 if (userIndex !== -1) {

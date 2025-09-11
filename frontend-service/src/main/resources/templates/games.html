@@ -3,7 +3,7 @@
 <body data-page="games">
     <div th:fragment="content">
         <div class="container">
-            <h2>Games</h2>
+            <h2 class="section-title">All Games</h2>
             <div class="app-grid" id="games-grid">
             </div>
         </div>
@@ -41,11 +41,18 @@
                     const isInstalled = loggedInUser && loggedInUser.installedApps && loggedInUser.installedApps.includes(app.id);
 
                     card.innerHTML = `
-                        <h3>${app.name}</h3>
-                        <p>${app.description}</p>
-                        <span>$${app.price.toFixed(2)}</span>
-                        <button onclick="installApp(${app.id})" ${isInstalled ? 'disabled class="installed-btn"': ''}>${isInstalled ? 'Installed' : 'Install'}</button>
-                        <button onclick="openReviewsModal(${app.id})">Show Reviews</button>
+                        <div class="app-card-image">
+                           <img src="/images/app-icon.png" alt="${app.name}">
+                        </div>
+                        <div class="app-card-content">
+                            <h3 class="app-card-title">${app.name}</h3>
+                            <p class="app-card-description">${app.description}</p>
+                            <span class="app-card-price">$${app.price.toFixed(2)}</span>
+                            <div class="app-card-actions">
+                                <button onclick="installApp(${app.id})" ${isInstalled ? 'disabled class="installed-btn"': ''}>${isInstalled ? 'Installed' : 'Install'}</button>
+                                <button onclick="openReviewsModal(${app.id})" class="secondary-btn">Reviews</button>
+                            </div>
+                        </div>
                     `;
                     appGrid.appendChild(card);
                 });

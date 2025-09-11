@@ -3,6 +3,7 @@ package com.playstore.frontend;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 @Controller
 public class FrontendController {
@@ -53,6 +54,14 @@ public class FrontendController {
     public String installed(Model model) {
         model.addAttribute("page", "installed");
         model.addAttribute("title", "Installed");
+        return "layout";
+    }
+
+    @GetMapping("/search")
+    public String search(@RequestParam("q") String query, Model model) {
+        model.addAttribute("page", "search");
+        model.addAttribute("title", "Search Results");
+        model.addAttribute("query", query);
         return "layout";
     }
 }

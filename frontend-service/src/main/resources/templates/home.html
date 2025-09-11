@@ -4,16 +4,16 @@
     <div th:fragment="content">
         <div class="container">
             <section class="hero">
-                <h2>Welcome to the Play Store!</h2>
-                <p>Your one-stop shop for apps and games.</p>
+                <h2 class="hero-title">Welcome to the Play Store!</h2>
+                <p class="hero-subtitle">Your one-stop shop for apps and games.</p>
                 <div class="search-bar">
-                    <input type="text" placeholder="Search for apps, games, and more...">
-                    <button>Search</button>
+                    <input type="text" id="search-input" placeholder="Search for apps, games, and more...">
+                    <button id="search-button">Search</button>
                 </div>
             </section>
 
             <section class="featured-apps">
-                <h3>Featured Apps</h3>
+                <h3 class="section-title">Featured Apps</h3>
                 <div class="app-grid">
                     <!-- Featured apps will be dynamically loaded here -->
                 </div>
@@ -24,6 +24,22 @@
             document.addEventListener('DOMContentLoaded', () => {
                 updateNav();
                 loadFeaturedApps();
+
+                const searchButton = document.getElementById('search-button');
+                const searchInput = document.getElementById('search-input');
+
+                searchButton.addEventListener('click', () => {
+                    const query = searchInput.value;
+                    if (query) {
+                        window.location.href = `/search?q=${encodeURIComponent(query)}`;
+                    }
+                });
+
+                searchInput.addEventListener('keyup', (event) => {
+                    if (event.key === 'Enter') {
+                        searchButton.click();
+                    }
+                });
             });
 
             function loadFeaturedApps() {
@@ -41,9 +57,14 @@
                     const card = document.createElement('div');
                     card.className = 'app-card';
                     card.innerHTML = `
-                        <h3>${app.name}</h3>
-                        <p>${app.description}</p>
-                        <span>$${app.price.toFixed(2)}</span>
+                        <div class="app-card-image">
+                           <img src="/images/app-icon.png" alt="${app.name}">
+                        </div>
+                        <div class="app-card-content">
+                            <h3 class="app-card-title">${app.name}</h3>
+                            <p class="app-card-description">${app.description}</p>
+                            <span class="app-card-price">$${app.price.toFixed(2)}</span>
+                        </div>
                     `;
                     appGrid.appendChild(card);
                 });

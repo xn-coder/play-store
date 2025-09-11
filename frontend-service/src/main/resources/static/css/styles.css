@@ -1,8 +1,9 @@
 /* General styles */
 body {
-    font-family: Arial, sans-serif;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     margin: 0;
-    background-color: #f0f2f5;
+    background-color: #f8f9fa;
+    color: #333;
 }
 
 .container {
@@ -13,9 +14,13 @@ body {
 
 /* Header */
 header {
-    background-color: #fff;
-    padding: 10px 20px;
-    border-bottom: 1px solid #ddd;
+    background-color: #ffffff;
+    padding: 15px 30px;
+    border-bottom: 1px solid #e0e0e0;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+    position: sticky;
+    top: 0;
+    z-index: 1000;
 }
 
 nav {
@@ -25,10 +30,10 @@ nav {
 }
 
 .logo {
-    font-size: 24px;
+    font-size: 28px;
     font-weight: bold;
     text-decoration: none;
-    color: #333;
+    color: #007bff;
 }
 
 .nav-links, .nav-auth {
@@ -36,126 +41,161 @@ nav {
     margin: 0;
     padding: 0;
     display: flex;
+    align-items: center;
 }
 
 .nav-links li, .nav-auth li {
-    margin-left: 20px;
+    margin-left: 25px;
 }
 
 .nav-links a, .nav-auth a {
     text-decoration: none;
     color: #555;
     font-weight: 500;
+    transition: color 0.3s ease;
 }
 
+.nav-links a:hover, .nav-auth a:hover,
 .nav-links a.active, .nav-auth a.active {
     color: #007bff;
 }
 
 /* Main content */
 main {
-    padding: 20px 0;
+    padding: 30px 0;
 }
 
 /* Home page */
 .hero {
     text-align: center;
-    padding: 80px 0;
-    background-color: #fff;
-    margin-bottom: 20px;
+    padding: 100px 20px;
+    background: linear-gradient(135deg, #007bff 0%, #0056b3 100%);
+    color: #fff;
+    margin-bottom: 30px;
+    border-radius: 8px;
 }
 
 .hero h2 {
-    font-size: 36px;
+    font-size: 48px;
     margin-bottom: 20px;
+    font-weight: 600;
 }
 
 .hero p {
-    font-size: 18px;
-    color: #666;
+    font-size: 20px;
+    color: #f0f0f0;
 }
 
 .featured-apps {
-    background-color: #fff;
-    padding: 30px;
+    background-color: #ffffff;
+    padding: 40px;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
 }
 
 /* App grid */
 .app-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-    gap: 20px;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 25px;
 }
 
 .app-card {
-    background-color: #f9f9f9;
-    border: 1px solid #eee;
-    padding: 15px;
+    background-color: #fff;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    padding: 20px;
     text-align: center;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.app-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
 }
 
 .app-card img {
     max-width: 100px;
     height: auto;
-    margin-bottom: 10px;
+    margin-bottom: 15px;
+    border-radius: 12px;
 }
 
 .app-card h3 {
-    font-size: 18px;
-    margin: 10px 0;
+    font-size: 20px;
+    margin: 15px 0 10px;
+    color: #333;
 }
 
 .app-card p {
-    color: #777;
+    color: #666;
     font-size: 14px;
+    line-height: 1.5;
 }
 
-/* Login and Register forms */
+/* Login, Register, and Upload forms */
 #login-form, #register-form, #upload-app-form {
-    max-width: 400px;
-    margin: 40px auto;
-    padding: 30px;
+    max-width: 450px;
+    margin: 50px auto;
+    padding: 40px;
     background-color: #fff;
-    border: 1px solid #ddd;
-    border-radius: 5px;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 }
 
 #login-form h2, #register-form h2, #upload-app-form h3 {
     text-align: center;
-    margin-bottom: 20px;
+    margin-bottom: 30px;
+    color: #007bff;
+    font-size: 24px;
 }
 
 #login-form div, #register-form div, #upload-app-form div {
-    margin-bottom: 15px;
+    margin-bottom: 20px;
 }
 
 label {
     display: block;
-    margin-bottom: 5px;
+    margin-bottom: 8px;
+    font-weight: 500;
+    color: #444;
 }
 
 input[type="text"], input[type="email"], input[type="password"], input[type="number"], textarea, select {
     width: 100%;
-    padding: 10px;
+    padding: 12px;
     border: 1px solid #ccc;
-    border-radius: 4px;
+    border-radius: 6px;
+    transition: border-color 0.3s ease;
+}
+
+input[type="text"]:focus, input[type="email"]:focus, input[type="password"]:focus, input[type="number"]:focus, textarea:focus, select:focus {
+    border-color: #007bff;
+    outline: none;
 }
 
 button[type="submit"] {
     width: 100%;
-    padding: 12px;
+    padding: 14px;
     background-color: #007bff;
     color: #fff;
     border: none;
-    border-radius: 4px;
+    border-radius: 6px;
     cursor: pointer;
-    font-size: 16px;
+    font-size: 18px;
+    font-weight: 500;
+    transition: background-color 0.3s ease;
+}
+
+button[type="submit"]:hover {
+    background-color: #0056b3;
 }
 
 /* Owner dashboard */
 .dashboard-container {
     display: flex;
-    gap: 20px;
+    gap: 30px;
+    align-items: flex-start;
 }
 
 .upload-app-form {
@@ -165,8 +205,9 @@ button[type="submit"] {
 .owner-apps-table {
     flex: 2;
     background-color: #fff;
-    padding: 20px;
-    border: 1px solid #ddd;
+    padding: 30px;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
 }
 
 .owner-apps-table table {
@@ -175,16 +216,22 @@ button[type="submit"] {
 }
 
 .owner-apps-table th, .owner-apps-table td {
-    padding: 12px;
-    border-bottom: 1px solid #eee;
+    padding: 15px;
+    border-bottom: 1px solid #f0f0f0;
     text-align: left;
+}
+
+.owner-apps-table th {
+    background-color: #f8f9fa;
+    font-weight: 600;
 }
 
 /* Footer */
 footer {
-    background-color: #fff;
-    padding: 15px;
-    border-top: 1px solid #ddd;
+    background-color: #ffffff;
+    padding: 20px;
+    border-top: 1px solid #e0e0e0;
     text-align: center;
-    margin-top: 30px;
+    margin-top: 40px;
+    color: #777;
 }

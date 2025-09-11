@@ -2,18 +2,20 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <body data-page="login">
     <div th:fragment="content">
-        <form id="login-form" onsubmit="handleLogin(event)">
-            <h2>Login</h2>
-            <div>
-                <label for="username">Username</label>
-                <input type="text" id="username" required>
-            </div>
-            <div>
-                <label for="password">Password</label>
-                <input type="password" id="password" required>
-            </div>
-            <button type="submit">Login</button>
-        </form>
+        <div class="container">
+            <form id="login-form" onsubmit="handleLogin(event)">
+                <h2>Login</h2>
+                <div>
+                    <label for="username">Username</label>
+                    <input type="text" id="username" required>
+                </div>
+                <div>
+                    <label for="password">Password</label>
+                    <input type="password" id="password" required>
+                </div>
+                <button type="submit">Login</button>
+            </form>
+        </div>
         <script>
             document.addEventListener('DOMContentLoaded', () => {
                 updateNav();

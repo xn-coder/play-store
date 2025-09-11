@@ -2,21 +2,23 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <body data-page="home">
     <div th:fragment="content">
-        <section class="hero">
-            <h2>Welcome to the Play Store!</h2>
-            <p>Your one-stop shop for apps and games.</p>
-            <div class="search-bar">
-                <input type="text" placeholder="Search for apps, games, and more...">
-                <button>Search</button>
-            </div>
-        </section>
+        <div class="container">
+            <section class="hero">
+                <h2>Welcome to the Play Store!</h2>
+                <p>Your one-stop shop for apps and games.</p>
+                <div class="search-bar">
+                    <input type="text" placeholder="Search for apps, games, and more...">
+                    <button>Search</button>
+                </div>
+            </section>
 
-        <section class="featured-apps">
-            <h3>Featured Apps</h3>
-            <div class="app-grid">
-                <!-- Featured apps will be dynamically loaded here -->
-            </div>
-        </section>
+            <section class="featured-apps">
+                <h3>Featured Apps</h3>
+                <div class="app-grid">
+                    <!-- Featured apps will be dynamically loaded here -->
+                </div>
+            </section>
+        </div>
 
         <script>
             document.addEventListener('DOMContentLoaded', () => {

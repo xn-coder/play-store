@@ -1,13 +1,16 @@
 package com.playstore.userservice.model;
 
-import org.springframework.data.annotation.Id;
-import org.springframework.data.mongodb.core.mapping.Document;
+import jakarta.persistence.*;
 
-@Document(collection = "roles")
+@Entity
+@Table(name = "roles")
 public class Role {
     @Id
-    private String id;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Integer id;
 
+    @Enumerated(EnumType.STRING)
+    @Column(length = 20)
     private Erole name;
 
     public Role() {
@@ -18,11 +21,11 @@ public class Role {
         this.name = name;
     }
 
-    public String getId() {
+    public Integer getId() {
         return id;
     }
 
-    public void setId(String id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 

@@ -58,7 +58,7 @@ public class AuthServiceImpl implements AuthService{
                 .collect(Collectors.toList());
 
         return ResponseEntity.ok(new JwtResponse(jwt,
-                userDetails.getId(),
+                String.valueOf(userDetails.getId()),
                 userDetails.getUsername(),
                 userDetails.getEmail(),
                 roles));

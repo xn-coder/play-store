@@ -8,7 +8,7 @@ import jakarta.validation.constraints.Size;
 import java.util.HashSet;
 import java.util.Set;
 
-@Entity
+@Entity(name = "users")
 @Table(name = "users")
 public class User {
     @Id

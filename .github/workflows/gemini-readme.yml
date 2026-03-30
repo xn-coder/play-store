@@ -34,9 +34,24 @@ jobs:
           import os
           import google.generativeai as genai
 
-          # Configure Gemini
-          genai.configure(api_key=os.environ.get("GEMINI_API_KEY"))
-          model = genai.GenerativeModel('gemini-1.5-flash') # 'flash' is fast and cheap
+          # 1. Setup API
+          api_key = os.environ.get("GEMINI_API_KEY")
+          genai.configure(api_key=api_key)
+
+          # 2. Find a valid model (Safety check)
+          available_models = [m.name for m in genai.list_models() if 'generateContent' in m.supported_generation_methods]
+          print(f"Available models: {available_models}")
+
+          # Try to use 1.5-flash, fallback to gemini-pro if flash isn't in your region yet
+          model_name = 'gemini-1.5-flash-latest' 
+          if 'models/gemini-1.5-flash-latest' not in available_models:
+              if 'models/gemini-1.5-flash' in available_models:
+                  model_name = 'gemini-1.5-flash'
+              else:
+                  model_name = 'gemini-pro' # Absolute fallback
+
+          print(f"Using model: {model_name}")
+          model = genai.GenerativeModel(model_name)
 
           # 1. Gather repository context
           file_structure = []

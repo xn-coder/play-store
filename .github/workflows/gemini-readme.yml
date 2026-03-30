@@ -1,3 +1,4 @@
+
 name: Gemini AI README Generator
 
 on:
@@ -34,7 +35,7 @@ jobs:
           import os
           import google.generativeai as genai
 
-           # Configure Gemini
+          # Configure Gemini
           genai.configure(api_key=os.environ.get("GEMINI_API_KEY"))
           model = genai.GenerativeModel('gemini-2.5-flash') # 'flash' is fast and cheap
 
@@ -55,12 +56,15 @@ jobs:
                   if f in ["package.json", "requirements.txt", "main.py", "index.js", "go.mod", "Dockerfile"]:
                       try:
                           with open(path, 'r') as file:
-                              important_content += f"\n--- Content of {f} ---\n{file.read()[:1000]}\n"
+                              important_content += f"
+--- Content of {f} ---
+{file.read()[:1000]}
+"
                       except:
                           pass
 
           # 2. Build the Prompt
-          prompt = f"""
+          prompt = f""
           I have a GitHub repository with the following structure:
           {file_structure}
 
@@ -76,7 +80,7 @@ jobs:
           - Quick start/Installation instructions.
           
           Output ONLY the markdown content.
-          """
+          ""
 
           # 3. Generate and Save
           try:

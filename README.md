@@ -1,41 +1,95 @@
-# Play Store Microservices
+# PlayStore Microservices Platform
 
-This project is a simplified microservices-based application that mimics a Play Store. It consists of several services that work together to provide functionality for users and app owners.
+Welcome to the PlayStore Microservices Platform – a comprehensive, scalable, and distributed application designed to simulate a digital app store experience. This project demonstrates a robust microservices architecture, providing functionalities for users to browse, install, and review applications, while empowering app owners to publish and manage their applications within the ecosystem.
 
-## Services
+## ✨ Features
 
-The following services are included in this project:
+*   **User Management:** Secure user registration and authentication, profile management.
+*   **Owner Management:** Dedicated registration and login for app owners to publish and oversee their applications.
+*   **Application Catalog:** A dynamic catalog allowing users to discover and browse a wide array of applications.
+*   **Search Functionality:** Efficient search capabilities to find applications by name, category, or other criteria.
+*   **App Installation:** Simulate the installation process for applications.
+*   **App Reviews & Ratings:** Users can leave reviews and ratings for installed applications.
+*   **Notification System:** Integrated service for delivering system notifications (e.g., app updates, review responses).
+*   **Service Discovery:** Centralized service registration and discovery to manage dynamic service instances.
+*   **Centralized Configuration:** Externalized and unified configuration management across all microservices.
+*   **API Gateway:** A single entry point for all client requests, providing routing, load balancing, and cross-cutting concerns.
+*   **Responsive Frontend:** An intuitive and user-friendly web interface for seamless interaction.
 
-*   **config-server:** A central configuration server for all the microservices.
-*   **discovery-server:** A service registry and discovery server (using Eureka).
-*   **api-gateway:** A single entry point for all the client requests. It also serves the frontend application.
-*   **user-service:** Manages user registration, login, and app installation.
-*   **owner-service:** Manages app owner registration, login, and app management.
-*   **notification-service:** Sends notifications to users (e.g., when a new app is installed).
-*   **search-service:** Provides search functionality for apps.
+## 🚀 Tech Stack
 
-## How to Run
+This project leverages a modern and powerful set of technologies to build a resilient and scalable microservices architecture:
 
-To run all the services, you can use the `run-services.sh` script:
+*   **Backend:** Java 17, Spring Boot, Spring Cloud (Eureka Server for Service Discovery, Config Server for Centralized Configuration, API Gateway), Spring Data JPA.
+*   **Database:** H2 Database (for development; easily configurable for production-grade relational databases).
+*   **Security:** Spring Security with JSON Web Tokens (JWT) for robust authentication and authorization.
+*   **Frontend:** Spring MVC (Thymeleaf for server-side rendering of dynamic web pages).
+*   **Build Tool:** Apache Maven.
+*   **Containerization:** Docker (for containerizing individual microservices).
+*   **Scripts:** Bash scripts (`.sh`) for Linux/macOS and Batch scripts (`.bat`) for Windows to simplify service startup.
+*   **CI/CD:** GitHub Actions (indicated by `.github/workflows`).
 
-```bash
-./run-services.sh
-```
+## ⚙️ Quick Start
 
-This will start all the services in the correct order. The services will be running in the background and their logs will be saved to corresponding log files (e.g., `api-gateway.log`).
+Follow these steps to get the PlayStore Microservices Platform up and running on your local machine.
 
-## Accessing the Application
+### Prerequisites
 
-Once the services are running, you can access the application at:
+*   **Java Development Kit (JDK) 17 or higher:** Ensure `JAVA_HOME` is set.
+*   **Apache Maven 3.6.x or higher:** For building the projects.
+*   **Git:** For cloning the repository.
+*   **Docker (Optional but Recommended):** For containerized deployment.
 
-[http://localhost:8081](http://localhost:8081)
+### Installation Steps
 
-This will open the main page of the Play Store. From there, you can navigate to the login and registration pages.
+1.  **Clone the Repository:**
+    ```bash
+    git clone <repository-url>
+    cd <repository-name> # e.g., cd playstore-microservices
+    ```
 
-## Health Check
+2.  **Build All Services:**
+    Navigate to the project root directory and build all microservices using Maven. This will compile the code, run tests, and package each service into an executable JAR file.
 
-The `api-gateway` provides a health check endpoint to verify if the service is running. You can access it at:
+    ```bash
+    # Using Maven wrapper (recommended)
+    ./mvnw clean install  # For Linux/macOS
+    mvnw.cmd clean install # For Windows
 
-[http://localhost:8081/health](http://localhost:8081/health)
+    # Or using globally installed Maven
+    mvn clean install
+    ```
 
-If the service is running, it will return the message "API Gateway is running".
+    This command will build all sub-projects (e.g., `eureka-server`, `config-server`, `user-service`, `frontend-service`, etc.).
+
+3.  **Run All Services:**
+    The project includes convenient scripts to start all microservices in the correct order.
+
+    *   **For Linux/macOS:**
+        ```bash
+        ./run-services.sh
+        ```
+
+    *   **For Windows:**
+        ```bash
+        .\stop-services.bat # (Optional: if services were running previously)
+        .\run-services.bat
+        ```
+    These scripts will typically start:
+    1.  `config-server`
+    2.  `eureka-server` (and `discovery-server` if separate)
+    3.  `user-service`, `owner-service`, `app-service`, `notification-service`, `search-service`
+    4.  `api-gateway`
+    5.  `frontend-service`
+
+    Each service will start in its own process, and you can observe their logs in your terminal.
+
+4.  **Access the Application:**
+    Once all services have successfully started (this might take a few moments), open your web browser and navigate to the frontend service:
+
+    ```
+    http://localhost:8080
+    ```
+    (The exact port might vary if configured differently in `frontend-service/src/main/resources/application.yml` or `.properties`.)
+
+You should now be able to interact with the PlayStore Microservices Platform!

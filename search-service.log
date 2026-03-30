@@ -9,7 +9,9 @@
 Downloading from central: https://repo.maven.apache.org/maven2/org/springframework/boot/spring-boot-starter-data-elasticsearch/3.2.1/spring-boot-starter-data-elasticsearch-3.2.1.pom
 Progress (1): 1.4/2.6 kB
 Progress (1): 2.6 kB    
-		    
+
+
+
 Downloaded from central: https://repo.maven.apache.org/maven2/org/springframework/boot/spring-boot-starter-data-elasticsearch/3.2.1/spring-boot-starter-data-elasticsearch-3.2.1.pom (2.6 kB at 314 B/s)
 Downloading from central: https://repo.maven.apache.org/maven2/org/springframework/data/spring-data-elasticsearch/5.2.1/spring-data-elasticsearch-5.2.1.pom
 Progress (1): 1.4/13 kB
